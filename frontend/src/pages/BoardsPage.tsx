@@ -1,54 +1,61 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBoards, createBoard } from "../features/boards/boardSlice";
-import { useNavigate } from "react-router-dom";
 import type { RootState } from "../app/store";
+import BoardCard from "../components/BoardCard";
 
 export default function BoardsPage() {
   const dispatch = useDispatch<any>();
-  const navigate = useNavigate();
   const { boards } = useSelector((state: RootState) => state.boards);
 
-  const [userName, setUserName] = useState("ivan");
+  const [userName, setUserName] = useState(
+    localStorage.getItem("user") || ""
+  );
   const [title, setTitle] = useState("");
 
   useEffect(() => {
-    dispatch(fetchBoards(userName));
-  }, []);
+    if (userName) {
+      dispatch(fetchBoards(userName));
+      localStorage.setItem("user", userName);
+    }
+  }, [userName]);
 
   const handleCreate = () => {
+    if (!title) return;
+
     dispatch(createBoard({ title, user_name: userName }));
     setTitle("");
   };
 
   return (
     <div style={{ padding: 20 }}>
-      <h1>Boards</h1>
+      <h1>Мои доски</h1>
 
-      <input
-        value={userName}
-        onChange={(e) => setUserName(e.target.value)}
-        placeholder="User name"
-      />
+      {/* пользователь */}
+      <div style={{ marginBottom: 20 }}>
+        <input
+          value={userName}
+          onChange={(e) => setUserName(e.target.value)}
+          placeholder="Введите имя пользователя"
+        />
+      </div>
 
-      <br /><br />
+      {/* создание доски */}
+      <div style={{ marginBottom: 20 }}>
+        <input
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Новая доска"
+        />
+        <button onClick={handleCreate}>Создать</button>
+      </div>
 
-      <input
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        placeholder="New board"
-      />
-      <button onClick={handleCreate}>Create</button>
-
-      <ul>
+      {/* список досок */}
+      <div style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
         {boards.map((b) => (
-          <li key={b.id}>
-            <button onClick={() => navigate(`/boards/${b.id}`)}>
-              {b.title}
-            </button>
-          </li>
+          <BoardCard key={b.id} board={b} />
         ))}
-      </ul>
+      </div>
     </div>
   );
 }
