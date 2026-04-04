@@ -52,7 +52,25 @@ export default function Column({ column, onAddCard }: any) {
             position: "relative",
           }}
         >
-          {card.title}
+          <div
+            onClick={async () => {
+              const newTitle = prompt("Новое название", card.title);
+              if (!newTitle) return;
+
+              await fetch(`http://127.0.0.1:8000/api/cards/${card.id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  title: newTitle,
+                  column_id: column.id,
+                }),
+              });
+
+              window.location.reload();
+            }}
+          >
+            {card.title}
+          </div>
 
           <button
             onClick={() => handleDeleteCard(card.id)}
