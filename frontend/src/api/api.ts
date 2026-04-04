@@ -12,3 +12,9 @@ export const createCard = (data: {
   description?: string;
   column_id: number;
 }) => api.post("/cards", data);
+
+export const deleteBoard = (id: number) =>
+  api.delete(`/boards/${id}`);
+
+export const deleteCard = (id: number) =>
+  api.delete(`/cards/${id}`);

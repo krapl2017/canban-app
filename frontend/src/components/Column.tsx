@@ -1,4 +1,13 @@
+import { deleteCard } from "../api/api";
+
 export default function Column({ column, onAddCard }: any) {
+  const handleDeleteCard = async (id: number) => {
+    if (!confirm("Удалить карточку?")) return;
+
+    await deleteCard(id);
+    window.location.reload(); // пока просто
+  };
+
   return (
     <div
       style={{
@@ -18,9 +27,24 @@ export default function Column({ column, onAddCard }: any) {
             padding: 8,
             marginBottom: 8,
             borderRadius: 4,
+            position: "relative",
           }}
         >
           {card.title}
+
+          {/* ❌ удалить карточку */}
+          <button
+            onClick={() => handleDeleteCard(card.id)}
+            style={{
+              position: "absolute",
+              top: 5,
+              right: 5,
+              background: "red",
+              color: "white",
+            }}
+          >
+            X
+          </button>
         </div>
       ))}
 
