@@ -1,18 +1,18 @@
 import { deleteCard, deleteColumn, uploadImage } from "../api/api";
 
-export default function Column({ column, onAddCard }: any) {
+export default function Column({ column, onAddCard, refresh  }: any) {
   const handleDeleteCard = async (id: number) => {
     if (!confirm("Удалить карточку?")) return;
 
     await deleteCard(id);
-    window.location.reload();
+    refresh();
   };
 
   const handleDeleteColumn = async () => {
     if (!confirm("Удалить колонку?")) return;
 
     await deleteColumn(column.id);
-    window.location.reload();
+    refresh();
   };
 
   return (
@@ -66,7 +66,7 @@ export default function Column({ column, onAddCard }: any) {
                 }),
               });
 
-              window.location.reload();
+              refresh();
             }}
           >
             
@@ -88,7 +88,7 @@ export default function Column({ column, onAddCard }: any) {
               const file = e.target.files[0];
 
               await uploadImage(card.id, file);
-              window.location.reload();
+              refresh();
             }}
           />
 

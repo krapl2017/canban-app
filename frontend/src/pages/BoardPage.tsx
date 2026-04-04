@@ -1,19 +1,20 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { api, createColumn, createCard } from "../api/api";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchBoardById } from "../features/boards/boardSlice";
+import type { RootState } from "../app/store";
 import Column from "../components/Column";
 
 export default function BoardPage() {
   const { id } = useParams();
-  const [board, setBoard] = useState<any>(null);
+  const dispatch = useDispatch<any>();
+  const board = useSelector((state: RootState) => state.boards.currentBoard);
+  //const [board, setBoard] = useState<any>(null);
   const [columnTitle, setColumnTitle] = useState("");
 
-  const fetchBoard = () => {
-    api.get(`/boards/${id}`).then((res) => setBoard(res.data));
-  };
-
   useEffect(() => {
-    fetchBoard();
+    dispatch(fetchBoardById(id!));
   }, [id]);
 
   const handleCreateColumn = async () => {
@@ -25,7 +26,7 @@ export default function BoardPage() {
     });
 
     setColumnTitle("");
-    fetchBoard();
+    dispatch(fetchBoardById(id!));
   };
 
   const handleCreateCard = async (columnId: number) => {
@@ -37,7 +38,7 @@ export default function BoardPage() {
       column_id: columnId,
     });
 
-    fetchBoard();
+    dispatch(fetchBoardById(id!));
   };
 
   if (!board) return <div>Loading...</div>;
@@ -65,6 +66,7 @@ export default function BoardPage() {
             key={col.id}
             column={col}
             onAddCard={handleCreateCard}
+            refresh={()=>dispatch(fetchBoardById(id!))}
           />
         ))}
       </div>

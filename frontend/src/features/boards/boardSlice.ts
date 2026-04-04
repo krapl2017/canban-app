@@ -17,10 +17,19 @@ export const createBoard = createAsyncThunk(
   }
 );
 
+export const fetchBoardById = createAsyncThunk(
+  "boards/fetchBoardById",
+  async (id: string) => {
+    const res = await api.get(`/boards/${id}`);
+    return res.data;
+  }
+);
+
 const boardsSlice = createSlice({
   name: "boards",
   initialState: {
     boards: [] as any[],
+    currentBoard: null as any,
     loading: false,
   },
   reducers: {},
@@ -35,6 +44,9 @@ const boardsSlice = createSlice({
       })
       .addCase(createBoard.fulfilled, (state, action) => {
         state.boards.push(action.payload);
+      })
+      .addCase(fetchBoardById.fulfilled, (state, action) => {
+        state.currentBoard = action.payload;
       });
   },
 });
