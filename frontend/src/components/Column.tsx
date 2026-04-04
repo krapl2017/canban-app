@@ -1,4 +1,4 @@
-import { deleteCard, deleteColumn } from "../api/api";
+import { deleteCard, deleteColumn, uploadImage } from "../api/api";
 
 export default function Column({ column, onAddCard }: any) {
   const handleDeleteCard = async (id: number) => {
@@ -69,8 +69,28 @@ export default function Column({ column, onAddCard }: any) {
               window.location.reload();
             }}
           >
+            
             {card.title}
+            {card.images.map((img: any) => (
+              <img
+                key={img.id}
+                src={`http://127.0.0.1:8000/storage/${img.path}`}
+                style={{ width: "100%", marginTop: 5 }}
+              />
+            ))}
           </div>
+
+          <input
+            type="file"
+            onChange={async (e) => {
+              if (!e.target.files?.[0]) return;
+
+              const file = e.target.files[0];
+
+              await uploadImage(card.id, file);
+              window.location.reload();
+            }}
+          />
 
           <button
             onClick={() => handleDeleteCard(card.id)}

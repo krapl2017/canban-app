@@ -21,3 +21,10 @@ export const deleteCard = (id: number) =>
 
 export const deleteColumn = (id: number) =>
   api.delete(`/columns/${id}`);
+
+export const uploadImage = (cardId: number, file: File) => {
+  const formData = new FormData();
+  formData.append("image", file);
+
+  return api.post(`/cards/${cardId}/images`, formData);
+};
