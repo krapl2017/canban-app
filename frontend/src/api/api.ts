@@ -28,3 +28,14 @@ export const uploadImage = (cardId: number, file: File) => {
 
   return api.post(`/cards/${cardId}/images`, formData);
 };
+
+export const updateColumn = (id: number, data: { title: string }) =>
+  api.put(`/columns/${id}`, data);
+
+export const updateCard = (
+  id: number,
+  data: { title: string; description?: string; column_id: number }
+) => api.put(`/cards/${id}`, data);
+
+export const deleteImage = (id: number) =>
+  api.delete(`/images/${id}`);

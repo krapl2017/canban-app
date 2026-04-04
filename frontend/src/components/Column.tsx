@@ -1,6 +1,14 @@
-import { deleteCard, deleteColumn, uploadImage } from "../api/api";
+import {
+  deleteCard,
+  deleteColumn,
+  uploadImage,
+  updateColumn,
+  updateCard,
+  deleteImage,
+} from "../api/api";
 
-export default function Column({ column, onAddCard, refresh  }: any) {
+export default function Column({ column, onAddCard, refresh }: any) {
+  // удалить карточку
   const handleDeleteCard = async (id: number) => {
     if (!confirm("Удалить карточку?")) return;
 
@@ -8,10 +16,53 @@ export default function Column({ column, onAddCard, refresh  }: any) {
     refresh();
   };
 
+  // удалить колонку
   const handleDeleteColumn = async () => {
     if (!confirm("Удалить колонку?")) return;
 
     await deleteColumn(column.id);
+    refresh();
+  };
+
+  // редактировать колонку
+  const handleEditColumn = async () => {
+    const newTitle = prompt("Новое название колонки", column.title);
+    if (!newTitle) return;
+
+    await updateColumn(column.id, { title: newTitle });
+
+    refresh();
+  };
+
+  // редактировать карточку
+  const handleEditCard = async (card: any) => {
+    const text = prompt(
+      "Редактировать карточку (первая строка — заголовок)",
+      `${card.title}\n${card.description || ""}`
+    );
+
+    if (!text) return;
+
+    const lines = text.split("\n");
+
+    const title = lines[0];
+    const description = lines.slice(1).join("\n");
+
+    await updateCard(card.id, {
+      title,
+      description,
+      column_id: column.id,
+    });
+
+    refresh();
+  };
+
+  // удалить изображение
+  const handleDeleteImage = async (imageId: number) => {
+    if (!confirm("Удалить изображение?")) return;
+
+    await deleteImage(imageId);
+
     refresh();
   };
 
@@ -25,7 +76,13 @@ export default function Column({ column, onAddCard, refresh  }: any) {
         position: "relative",
       }}
     >
-      <h3>{column.title}</h3>
+      {/* редактирование колонки */}
+      <h3
+        onClick={handleEditColumn}
+        style={{ cursor: "pointer" }}
+      >
+        {column.title}
+      </h3>
 
       {/* удалить колонку */}
       <button
@@ -52,34 +109,49 @@ export default function Column({ column, onAddCard, refresh  }: any) {
             position: "relative",
           }}
         >
+          {/* карточка как заметка */}
           <div
-            onClick={async () => {
-              const newTitle = prompt("Новое название", card.title);
-              if (!newTitle) return;
-
-              await fetch(`http://127.0.0.1:8000/api/cards/${card.id}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  title: newTitle,
-                  column_id: column.id,
-                }),
-              });
-
-              refresh();
-            }}
+            onClick={() => handleEditCard(card)}
+            style={{ cursor: "pointer" }}
           >
-            
-            {card.title}
-            {card.images.map((img: any) => (
+            {/* заголовок */}
+            <div style={{ fontWeight: "bold" }}>
+              {card.title}
+            </div>
+
+            {/* описание */}
+            {card.description && (
+              <div style={{ marginTop: 4 }}>
+                {card.description}
+              </div>
+            )}
+          </div>
+
+          {/* изображения */}
+          {card.images?.map((img: any) => (
+            <div key={img.id} style={{ position: "relative" }}>
               <img
-                key={img.id}
                 src={`http://127.0.0.1:8000/storage/${img.path}`}
                 style={{ width: "100%", marginTop: 5 }}
               />
-            ))}
-          </div>
 
+              {/* удалить изображение */}
+              <button
+                onClick={() => handleDeleteImage(img.id)}
+                style={{
+                  position: "absolute",
+                  top: 5,
+                  right: 5,
+                  background: "red",
+                  color: "white",
+                }}
+              >
+                X
+              </button>
+            </div>
+          ))}
+
+          {/* загрузка */}
           <input
             type="file"
             onChange={async (e) => {
@@ -92,6 +164,7 @@ export default function Column({ column, onAddCard, refresh  }: any) {
             }}
           />
 
+          {/* удалить карточку */}
           <button
             onClick={() => handleDeleteCard(card.id)}
             style={{
