@@ -18,3 +18,6 @@ export const deleteBoard = (id: number) =>
 
 export const deleteCard = (id: number) =>
   api.delete(`/cards/${id}`);
+
+export const deleteColumn = (id: number) =>
+  api.delete(`/columns/${id}`);

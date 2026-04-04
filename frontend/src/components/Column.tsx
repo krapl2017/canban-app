@@ -1,11 +1,18 @@
-import { deleteCard } from "../api/api";
+import { deleteCard, deleteColumn } from "../api/api";
 
 export default function Column({ column, onAddCard }: any) {
   const handleDeleteCard = async (id: number) => {
     if (!confirm("Удалить карточку?")) return;
 
     await deleteCard(id);
-    window.location.reload(); // пока просто
+    window.location.reload();
+  };
+
+  const handleDeleteColumn = async () => {
+    if (!confirm("Удалить колонку?")) return;
+
+    await deleteColumn(column.id);
+    window.location.reload();
   };
 
   return (
@@ -15,9 +22,24 @@ export default function Column({ column, onAddCard }: any) {
         padding: 10,
         borderRadius: 8,
         width: 250,
+        position: "relative",
       }}
     >
       <h3>{column.title}</h3>
+
+      {/* удалить колонку */}
+      <button
+        onClick={handleDeleteColumn}
+        style={{
+          position: "absolute",
+          top: 5,
+          right: 5,
+          background: "red",
+          color: "white",
+        }}
+      >
+        X
+      </button>
 
       {column.cards.map((card: any) => (
         <div
@@ -32,7 +54,6 @@ export default function Column({ column, onAddCard }: any) {
         >
           {card.title}
 
-          {/* ❌ удалить карточку */}
           <button
             onClick={() => handleDeleteCard(card.id)}
             style={{
