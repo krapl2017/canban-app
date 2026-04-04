@@ -1,7 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { deleteBoard } from "../api/api";
+import { useDispatch } from "react-redux";
+import { fetchBoards } from "../features/boards/boardSlice";
 
 export default function BoardCard({ board }: any) {
+  const dispatch = useDispatch<any>();
   const navigate = useNavigate();
 
   const handleDelete = async (e: any) => {
@@ -11,7 +14,7 @@ export default function BoardCard({ board }: any) {
 
     await deleteBoard(board.id);
 
-    window.location.reload(); // пока просто
+    dispatch(fetchBoards(board.user_name));
   };
 
   return (
