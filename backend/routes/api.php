@@ -18,6 +18,7 @@ Route::delete('/columns/{id}', [ColumnController::class, 'destroy']);
 Route::post('/cards', [CardController::class, 'store']);
 Route::put('/cards/{id}', [CardController::class, 'update']);
 Route::delete('/cards/{id}', [CardController::class, 'destroy']);
+Route::post('/cards/reorder', [CardController::class, 'reorder']);
 
 Route::post('/cards/{id}/images', [ImageController::class, 'store']);
 Route::delete('/images/{id}', [ImageController::class, 'destroy']);

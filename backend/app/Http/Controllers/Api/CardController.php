@@ -35,4 +35,20 @@ class CardController extends Controller
 
         return response()->json(['success' => true]);
     }
+
+    // Поменять порядок карточек
+    public function reorder(Request $request)
+    {
+        $cards = $request->cards;
+
+        foreach ($cards as $index => $cardData) {
+            \App\Models\Card::where('id', $cardData['id'])
+                ->update([
+                    'column_id' => $cardData['column_id'],
+                    'order' => $index
+                ]);
+        }
+
+        return response()->json(['success' => true]);
+    }
 }
