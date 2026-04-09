@@ -39,3 +39,8 @@ export const updateCard = (
 
 export const deleteImage = (id: number) =>
   api.delete(`/images/${id}`);
+
+export const reorderCards = (cards: {
+  id: number;
+  column_id: number;
+}[]) => api.post("/cards/reorder", { cards });

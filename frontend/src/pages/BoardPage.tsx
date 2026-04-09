@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { api, createColumn, createCard, updateCard } from "../api/api";
+import { api, createColumn, createCard, updateCard, reorderCards } from "../api/api";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBoardById } from "../features/boards/boardSlice";
 import type { RootState } from "../app/store";
@@ -43,29 +43,75 @@ export default function BoardPage() {
   };
 
   const handleDragEnd = async (event: any) => {
-  const { active, over } = event;
+    const { active, over } = event;
 
-  if (!over) return;
+    if (!over || !board) return;
 
-  const activeId = Number(active.id);
-  const overId = Number(over.id);
+    const activeId = Number(active.id);
+    const overId = Number(over.id);
 
-  // ищем колонку куда кинули
-  let targetColumnId = overId;
+    let newColumns = JSON.parse(JSON.stringify(board.columns));
 
-  // если кинули на карточку — берем её колонку
-  for (const col of board.columns) {
-    if (col.cards.find((c: any) => c.id === overId)) {
-      targetColumnId = col.id;
+    let sourceCol: any;
+    let targetCol: any;
+
+    // найти колонки
+    for (const col of newColumns) {
+      if (col.cards.find((c: any) => c.id === activeId)) {
+        sourceCol = col;
+      }
+      if (
+        col.id === overId ||
+        col.cards.find((c: any) => c.id === overId)
+      ) {
+        targetCol = col;
+      }
     }
-  }
 
-  await updateCard(activeId, {
-    column_id: targetColumnId,
-  });
+    if (!sourceCol || !targetCol) return;
 
-  dispatch(fetchBoardById(id!));
-};
+    // вытащить карточку
+    const movingCard = sourceCol.cards.find(
+      (c: any) => c.id === activeId
+    );
+
+    sourceCol.cards = sourceCol.cards.filter(
+      (c: any) => c.id !== activeId
+    );
+
+    // индекс вставки
+    let overIndex = targetCol.cards.findIndex(
+      (c: any) => c.id === overId
+    );
+
+    // если кидать не в карточку => кидать в конец
+    if (overIndex === -1) {
+      overIndex = targetCol.cards.length;
+    }
+
+    targetCol.cards.splice(overIndex, 0, {
+      ...movingCard,
+      column_id: targetCol.id,
+    });
+
+    // сформировать полный список
+    const result: any[] = [];
+
+    newColumns.forEach((col: any) => {
+      col.cards.forEach((card: any, index: number) => {
+        result.push({
+          id: card.id,
+          column_id: col.id,
+          order: index,
+        });
+      });
+    });
+
+    await reorderCards(result);
+
+    dispatch(fetchBoardById(id!));
+  };
+
 
   if (!board) return <div>Loading...</div>;
 
