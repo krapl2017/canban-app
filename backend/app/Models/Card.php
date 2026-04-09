@@ -8,7 +8,7 @@ use App\Models\Image;
 
 class Card extends Model
 {
-    protected $fillable = ['title', 'description', 'column_id'];
+    protected $fillable = ['title', 'description', 'column_id', 'order'];
 
     public function column()
     {

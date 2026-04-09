@@ -26,7 +26,9 @@ class BoardController extends Controller
     // Получить одну доску со всем содержимым
     public function show($id)
     {
-        return Board::with('columns.cards.images')->findOrFail($id);
+        return Board::with(['columns.cards' => function ($q) {
+            $q->orderBy('order');
+        }, 'columns.cards.images'])->findOrFail($id);
     }
 
     // Удалить доску
