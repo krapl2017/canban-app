@@ -1,57 +1,17 @@
 import {
-  deleteCard,
   deleteColumn,
-  uploadImage,
   updateColumn,
-  updateCard,
-  deleteImage,
 } from "../api/api";
 import { useDroppable } from "@dnd-kit/core";
 import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 
-function SortableCard({ card, children }: any) {
-  const { isDragging } = useSortable({
-    id: card.id,
-  });
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-  } = useSortable({
-    id: card.id,
-  });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    cursor: "grab",
-    opacity: isDragging  ? 0.5 : 1, 
-  };
-
-  return (
-    <div ref={setNodeRef} {...attributes} {...listeners} style={style}>
-      {children}
-    </div>
-  );
-}
+import Card from "./Card";
+import SortableCard from "./SortableCard";
 
 export default function Column({ column, onAddCard, refresh }: any) {
-  // удалить карточку
-  const handleDeleteCard = async (id: number) => {
-    if (!confirm("Удалить карточку?")) return;
-
-    await deleteCard(id);
-    refresh();
-  };
-
-  // удалить колонку
   const handleDeleteColumn = async () => {
     if (!confirm("Удалить колонку?")) return;
 
@@ -59,44 +19,11 @@ export default function Column({ column, onAddCard, refresh }: any) {
     refresh();
   };
 
-  // редактировать колонку
   const handleEditColumn = async () => {
     const newTitle = prompt("Новое название колонки", column.title);
     if (!newTitle) return;
 
     await updateColumn(column.id, { title: newTitle });
-
-    refresh();
-  };
-
-  // редактировать карточку
-  const handleEditCard = async (card: any) => {
-    const text = prompt(
-      "Редактировать карточку (первая строка — заголовок)",
-      `${card.title}\n${card.description || ""}`
-    );
-
-    if (!text) return;
-
-    const lines = text.split("\n");
-
-    const title = lines[0];
-    const description = lines.slice(1).join("\n");
-
-    await updateCard(card.id, {
-      title,
-      description,
-      column_id: column.id,
-    });
-
-    refresh();
-  };
-
-  // удалить изображение
-  const handleDeleteImage = async (imageId: number) => {
-    if (!confirm("Удалить изображение?")) return;
-
-    await deleteImage(imageId);
 
     refresh();
   };
@@ -116,7 +43,6 @@ export default function Column({ column, onAddCard, refresh }: any) {
         position: "relative",
       }}
     >
-      {/* редактирование колонки */}
       <h3
         onClick={handleEditColumn}
         style={{ cursor: "pointer" }}
@@ -124,7 +50,6 @@ export default function Column({ column, onAddCard, refresh }: any) {
         {column.title}
       </h3>
 
-      {/* удалить колонку */}
       <button
         onClick={handleDeleteColumn}
         style={{
@@ -143,87 +68,13 @@ export default function Column({ column, onAddCard, refresh }: any) {
         strategy={verticalListSortingStrategy}
       >
         {column.cards.map((card: any) => (
-          <SortableCard key={card.id} card={card}>
-            <div
-              key={card.id}
-              style={{
-                background: "white",
-                padding: 8,
-                marginBottom: 8,
-                borderRadius: 4,
-                position: "relative",
-              }}
-            >
-              {/* карточка как заметка */}
-              <div
-                onClick={() => handleEditCard(card)}
-                style={{ cursor: "pointer" }}
-              >
-                {/* заголовок */}
-                <div style={{ fontWeight: "bold" }}>
-                  {card.title}
-                </div>
-
-                {/* описание */}
-                {card.description && (
-                  <div style={{ marginTop: 4 }}>
-                    {card.description}
-                  </div>
-                )}
-              </div>
-
-              {/* изображения */}
-              {card.images?.map((img: any) => (
-                <div key={img.id} style={{ position: "relative" }}>
-                  <img
-                    src={`http://127.0.0.1:8000/storage/${img.path}`}
-                    style={{ width: "100%", marginTop: 5 }}
-                  />
-
-                  {/* удалить изображение */}
-                  <button
-                    onClick={() => handleDeleteImage(img.id)}
-                    style={{
-                      position: "absolute",
-                      top: 5,
-                      right: 5,
-                      background: "red",
-                      color: "white",
-                    }}
-                  >
-                    X
-                  </button>
-                </div>
-              ))}
-
-              {/* загрузка */}
-              <input
-                type="file"
-                onChange={async (e) => {
-                  if (!e.target.files?.[0]) return;
-
-                  const file = e.target.files[0];
-
-                  await uploadImage(card.id, file);
-                  refresh();
-                }}
-              />
-
-              {/* удалить карточку */}
-              <button
-                onClick={() => handleDeleteCard(card.id)}
-                style={{
-                  position: "absolute",
-                  top: 5,
-                  right: 5,
-                  background: "red",
-                  color: "white",
-                }}
-              >
-                X
-              </button>
-            </div>
-          </SortableCard >
+          <SortableCard key={card.id} id={card.id}>
+            <Card
+              card={card}
+              columnId={column.id}
+              refresh={refresh}
+            />
+          </SortableCard>
         ))}
       </SortableContext>
 
