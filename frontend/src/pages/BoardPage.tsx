@@ -1,19 +1,41 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { api, createColumn, createCard, updateCard, reorderCards } from "../api/api";
+import { createColumn, createCard, reorderCards } from "../api/api";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchBoardById } from "../features/boards/boardSlice";
+import { fetchBoardById, setBoard } from "../features/boards/boardSlice";
 import type { RootState } from "../app/store";
 import Column from "../components/Column";
-import { DndContext } from "@dnd-kit/core";
-import { setBoard } from "../features/boards/boardSlice";
+import {
+  DndContext,
+  DragOverlay,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  closestCenter,
+} from "@dnd-kit/core";
 
 export default function BoardPage() {
   const { id } = useParams();
   const dispatch = useDispatch<any>();
   const board = useSelector((state: RootState) => state.boards.currentBoard);
-  //const [board, setBoard] = useState<any>(null);
+  const [activeCard, setActiveCard] = useState<any>(null);
   const [columnTitle, setColumnTitle] = useState("");
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: { distance: 5 },
+    })
+  );
+
+  const handleDragStart = (event: any) => {
+    const { active } = event;
+    const id = Number(active.id);
+
+    const card = board.columns
+      .flatMap((col: any) => col.cards)
+      .find((c: any) => c.id === id);
+
+    setActiveCard(card);
+  };
 
   useEffect(() => {
     dispatch(fetchBoardById(id!));
@@ -144,7 +166,16 @@ export default function BoardPage() {
       </div>
 
       {/* колонки */}
-      <DndContext onDragEnd={handleDragEnd}>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragStart={handleDragStart}
+        onDragEnd={(e) => {
+          handleDragEnd(e);
+          setActiveCard(null);
+        }}
+        onDragCancel={() => setActiveCard(null)}
+      >
         <div style={{ display: "flex", gap: 20 }}>
           {board.columns.map((col: any) => (
             <Column
@@ -155,6 +186,29 @@ export default function BoardPage() {
             />
           ))}
         </div>
+        <DragOverlay>
+          {activeCard ? (
+            <div
+              style={{
+                background: "white",
+                padding: 8,
+                borderRadius: 6,
+                width: 250,
+                boxShadow: "0 8px 20px rgba(0,0,0,0.2)",
+              }}
+            >
+              <div style={{ fontWeight: "bold" }}>
+                {activeCard.title}
+              </div>
+
+              {activeCard.description && (
+                <div style={{ marginTop: 4 }}>
+                  {activeCard.description}
+                </div>
+              )}
+            </div>
+          ) : null}
+        </DragOverlay>
       </DndContext>
     </div>
   );

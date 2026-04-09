@@ -7,7 +7,6 @@ import {
   deleteImage,
 } from "../api/api";
 import { useDroppable } from "@dnd-kit/core";
-import { useDraggable } from "@dnd-kit/core";
 import {
   SortableContext,
   verticalListSortingStrategy,
