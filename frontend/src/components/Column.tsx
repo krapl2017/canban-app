@@ -6,6 +6,28 @@ import {
   updateCard,
   deleteImage,
 } from "../api/api";
+import { useDroppable } from "@dnd-kit/core";
+import { useDraggable } from "@dnd-kit/core";
+
+function DraggableCard({ card, children }: any) {
+  const { attributes, listeners, setNodeRef, transform } =
+    useDraggable({
+      id: card.id,
+    });
+
+  const style = {
+    transform: transform
+      ? `translate(${transform.x}px, ${transform.y}px)`
+      : undefined,
+    cursor: "grab",
+  };
+
+  return (
+    <div ref={setNodeRef} {...listeners} {...attributes} style={style}>
+      {children}
+    </div>
+  );
+}
 
 export default function Column({ column, onAddCard, refresh }: any) {
   // удалить карточку
@@ -66,8 +88,13 @@ export default function Column({ column, onAddCard, refresh }: any) {
     refresh();
   };
 
+  const { setNodeRef } = useDroppable({
+    id: column.id,
+  });
+
   return (
     <div
+      ref={setNodeRef}
       style={{
         background: "#ebecf0",
         padding: 10,
@@ -99,85 +126,87 @@ export default function Column({ column, onAddCard, refresh }: any) {
       </button>
 
       {column.cards.map((card: any) => (
-        <div
-          key={card.id}
-          style={{
-            background: "white",
-            padding: 8,
-            marginBottom: 8,
-            borderRadius: 4,
-            position: "relative",
-          }}
-        >
-          {/* карточка как заметка */}
+        <DraggableCard key={card.id} card={card}>
           <div
-            onClick={() => handleEditCard(card)}
-            style={{ cursor: "pointer" }}
-          >
-            {/* заголовок */}
-            <div style={{ fontWeight: "bold" }}>
-              {card.title}
-            </div>
-
-            {/* описание */}
-            {card.description && (
-              <div style={{ marginTop: 4 }}>
-                {card.description}
-              </div>
-            )}
-          </div>
-
-          {/* изображения */}
-          {card.images?.map((img: any) => (
-            <div key={img.id} style={{ position: "relative" }}>
-              <img
-                src={`http://127.0.0.1:8000/storage/${img.path}`}
-                style={{ width: "100%", marginTop: 5 }}
-              />
-
-              {/* удалить изображение */}
-              <button
-                onClick={() => handleDeleteImage(img.id)}
-                style={{
-                  position: "absolute",
-                  top: 5,
-                  right: 5,
-                  background: "red",
-                  color: "white",
-                }}
-              >
-                X
-              </button>
-            </div>
-          ))}
-
-          {/* загрузка */}
-          <input
-            type="file"
-            onChange={async (e) => {
-              if (!e.target.files?.[0]) return;
-
-              const file = e.target.files[0];
-
-              await uploadImage(card.id, file);
-              refresh();
-            }}
-          />
-
-          {/* удалить карточку */}
-          <button
-            onClick={() => handleDeleteCard(card.id)}
+            key={card.id}
             style={{
-              position: "absolute",
-              top: 5,
-              right: 5,
-              background: "red",
-              color: "white",
+              background: "white",
+              padding: 8,
+              marginBottom: 8,
+              borderRadius: 4,
+              position: "relative",
             }}
           >
-            X
-          </button>
-        </div>
+            {/* карточка как заметка */}
+            <div
+              onClick={() => handleEditCard(card)}
+              style={{ cursor: "pointer" }}
+            >
+              {/* заголовок */}
+              <div style={{ fontWeight: "bold" }}>
+                {card.title}
+              </div>
+
+              {/* описание */}
+              {card.description && (
+                <div style={{ marginTop: 4 }}>
+                  {card.description}
+                </div>
+              )}
+            </div>
+
+            {/* изображения */}
+            {card.images?.map((img: any) => (
+              <div key={img.id} style={{ position: "relative" }}>
+                <img
+                  src={`http://127.0.0.1:8000/storage/${img.path}`}
+                  style={{ width: "100%", marginTop: 5 }}
+                />
+
+                {/* удалить изображение */}
+                <button
+                  onClick={() => handleDeleteImage(img.id)}
+                  style={{
+                    position: "absolute",
+                    top: 5,
+                    right: 5,
+                    background: "red",
+                    color: "white",
+                  }}
+                >
+                  X
+                </button>
+              </div>
+            ))}
+
+            {/* загрузка */}
+            <input
+              type="file"
+              onChange={async (e) => {
+                if (!e.target.files?.[0]) return;
+
+                const file = e.target.files[0];
+
+                await uploadImage(card.id, file);
+                refresh();
+              }}
+            />
+
+            {/* удалить карточку */}
+            <button
+              onClick={() => handleDeleteCard(card.id)}
+              style={{
+                position: "absolute",
+                top: 5,
+                right: 5,
+                background: "red",
+                color: "white",
+              }}
+            >
+              X
+            </button>
+          </div>
+        </DraggableCard>
       ))}
 
       <button onClick={() => onAddCard(column.id)}>

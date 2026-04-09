@@ -34,7 +34,7 @@ export const updateColumn = (id: number, data: { title: string }) =>
 
 export const updateCard = (
   id: number,
-  data: { title: string; description?: string; column_id: number }
+  data: { title?: string; description?: string; column_id: number }
 ) => api.put(`/cards/${id}`, data);
 
 export const deleteImage = (id: number) =>

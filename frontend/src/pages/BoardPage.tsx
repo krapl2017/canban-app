@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { api, createColumn, createCard } from "../api/api";
+import { api, createColumn, createCard, updateCard } from "../api/api";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBoardById } from "../features/boards/boardSlice";
 import type { RootState } from "../app/store";
 import Column from "../components/Column";
+import { DndContext } from "@dnd-kit/core";
 
 export default function BoardPage() {
   const { id } = useParams();
@@ -41,6 +42,25 @@ export default function BoardPage() {
     dispatch(fetchBoardById(id!));
   };
 
+  const handleDragEnd = async (event: any) => {
+    const { active, over } = event;
+
+    // если бросили вне колонки
+    if (!over) return;
+
+    const cardId = Number(active.id);
+    const newColumnId = Number(over.id);
+
+    // если кинули в ту же колонку — ничего не делаем
+    if (!cardId || !newColumnId) return;
+
+    await updateCard(cardId, {
+      column_id: newColumnId,
+    });
+
+    dispatch(fetchBoardById(id!));
+  };
+
   if (!board) return <div>Loading...</div>;
 
   return (
@@ -60,16 +80,18 @@ export default function BoardPage() {
       </div>
 
       {/* колонки */}
-      <div style={{ display: "flex", gap: 20 }}>
-        {board.columns.map((col: any) => (
-          <Column
-            key={col.id}
-            column={col}
-            onAddCard={handleCreateCard}
-            refresh={()=>dispatch(fetchBoardById(id!))}
-          />
-        ))}
-      </div>
+      <DndContext onDragEnd={handleDragEnd}>
+        <div style={{ display: "flex", gap: 20 }}>
+          {board.columns.map((col: any) => (
+            <Column
+              key={col.id}
+              column={col}
+              onAddCard={handleCreateCard}
+              refresh={()=>dispatch(fetchBoardById(id!))}
+            />
+          ))}
+        </div>
+      </DndContext>
     </div>
   );
 }
