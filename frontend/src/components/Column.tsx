@@ -14,7 +14,7 @@ import SortableCard from "./SortableCard";
 import { useState } from "react";
 import Modal from "./Modal";
 
-export default function Column({ column, onAddCard, refresh }: any) {
+export default function Column({ column, onAddCard, refresh, setGlobalModalOpen }: any) {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [newTitle, setNewTitle] = useState(column.title);
@@ -81,6 +81,7 @@ export default function Column({ column, onAddCard, refresh }: any) {
               card={card}
               columnId={column.id}
               refresh={refresh}
+              setGlobalModalOpen={setGlobalModalOpen}
             />
           </SortableCard>
         ))}

@@ -18,6 +18,8 @@ export default function Modal({ open, onClose, children }: any) {
         justifyContent: "center",
         alignItems: "center",
         zIndex: 1000,
+
+        pointerEvents: "auto",
       }}
     >
       <div
@@ -27,6 +29,8 @@ export default function Modal({ open, onClose, children }: any) {
           padding: 20,
           borderRadius: 8,
           minWidth: 300,
+
+          pointerEvents: "auto",
         }}
       >
         {children}

@@ -12,6 +12,7 @@ export default function Card({
   card,
   columnId,
   refresh,
+  setGlobalModalOpen,
 }: any) {
 
   const [isOpen, setIsOpen] = useState(false);
@@ -23,6 +24,17 @@ export default function Card({
   const openModal = () => {
     setText(`${card.title}\n${card.description || ""}`);
     setIsOpen(true);
+    setGlobalModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+    setGlobalModalOpen(false);
+  };
+
+  const closeDeleteModal = () => {
+    setIsDeleteOpen(false);
+    setGlobalModalOpen(false);
   };
 
   const handleSave = async () => {
@@ -120,7 +132,7 @@ export default function Card({
         X
       </button>
 
-      <Modal open={isOpen} onClose={() => setIsOpen(false)}>
+      <Modal open={isOpen} onClose={closeModal}>
         {/* textarea */}
         <textarea
           value={text}
@@ -198,7 +210,7 @@ export default function Card({
         </div>
       </Modal>
 
-      <Modal open={isDeleteOpen} onClose={() => setIsDeleteOpen(false)}>
+      <Modal open={isDeleteOpen} onClose={closeDeleteModal}>
         <h3>Точно удалить карточку?</h3>
 
         <div style={{ marginTop: 20, display: "flex", gap: 10 }}>
@@ -213,7 +225,7 @@ export default function Card({
             Удалить
           </button>
 
-          <button onClick={() => setIsDeleteOpen(false)}>
+          <button onClick={closeDeleteModal}>
             Отмена
           </button>
         </div>

@@ -20,9 +20,10 @@ export default function BoardPage() {
   const board = useSelector((state: RootState) => state.boards.currentBoard);
   const [activeCard, setActiveCard] = useState<any>(null);
   const [columnTitle, setColumnTitle] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const sensors = useSensors(
     useSensor(PointerSensor, {
-      activationConstraint: { distance: 5 },
+      activationConstraint: { distance: isModalOpen ? 9999 : 5 },
     })
   );
 
@@ -175,6 +176,7 @@ export default function BoardPage() {
           setActiveCard(null);
         }}
         onDragCancel={() => setActiveCard(null)}
+        
       >
         <div style={{ display: "flex", gap: 20 }}>
           {board.columns.map((col: any) => (
@@ -183,6 +185,7 @@ export default function BoardPage() {
               column={col}
               onAddCard={handleCreateCard}
               refresh={()=>dispatch(fetchBoardById(id!))}
+              setGlobalModalOpen={setIsModalOpen}
             />
           ))}
         </div>
