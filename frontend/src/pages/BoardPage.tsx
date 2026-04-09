@@ -43,23 +43,29 @@ export default function BoardPage() {
   };
 
   const handleDragEnd = async (event: any) => {
-    const { active, over } = event;
+  const { active, over } = event;
 
-    // если бросили вне колонки
-    if (!over) return;
+  if (!over) return;
 
-    const cardId = Number(active.id);
-    const newColumnId = Number(over.id);
+  const activeId = Number(active.id);
+  const overId = Number(over.id);
 
-    // если кинули в ту же колонку — ничего не делаем
-    if (!cardId || !newColumnId) return;
+  // ищем колонку куда кинули
+  let targetColumnId = overId;
 
-    await updateCard(cardId, {
-      column_id: newColumnId,
-    });
+  // если кинули на карточку — берем её колонку
+  for (const col of board.columns) {
+    if (col.cards.find((c: any) => c.id === overId)) {
+      targetColumnId = col.id;
+    }
+  }
 
-    dispatch(fetchBoardById(id!));
-  };
+  await updateCard(activeId, {
+    column_id: targetColumnId,
+  });
+
+  dispatch(fetchBoardById(id!));
+};
 
   if (!board) return <div>Loading...</div>;
 
