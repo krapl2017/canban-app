@@ -32,7 +32,11 @@ const boardsSlice = createSlice({
     currentBoard: null as any,
     loading: false,
   },
-  reducers: {},
+  reducers: {
+      setBoard(state, action) {
+      state.currentBoard = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchBoards.pending, (state) => {
@@ -50,5 +54,7 @@ const boardsSlice = createSlice({
       });
   },
 });
+
+export const { setBoard } = boardsSlice.actions;
 
 export default boardsSlice.reducer;

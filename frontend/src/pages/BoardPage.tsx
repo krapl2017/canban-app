@@ -6,6 +6,7 @@ import { fetchBoardById } from "../features/boards/boardSlice";
 import type { RootState } from "../app/store";
 import Column from "../components/Column";
 import { DndContext } from "@dnd-kit/core";
+import { setBoard } from "../features/boards/boardSlice";
 
 export default function BoardPage() {
   const { id } = useParams();
@@ -107,9 +108,20 @@ export default function BoardPage() {
       });
     });
 
-    await reorderCards(result);
+    const prevBoard = board;
 
-    dispatch(fetchBoardById(id!));
+    dispatch(setBoard({
+      ...board,
+      columns: newColumns,
+    }));
+
+    try {
+      await reorderCards(result);
+    } catch (e) {
+      // откат
+      dispatch(setBoard(prevBoard));
+      alert("Ошибка сохранения");
+    }
   };
 
 
