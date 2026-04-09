@@ -15,6 +15,9 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
 function SortableCard({ card, children }: any) {
+  const { isDragging } = useSortable({
+    id: card.id,
+  });
   const {
     attributes,
     listeners,
@@ -29,6 +32,7 @@ function SortableCard({ card, children }: any) {
     transform: CSS.Transform.toString(transform),
     transition,
     cursor: "grab",
+    opacity: isDragging  ? 0.5 : 1, 
   };
 
   return (
