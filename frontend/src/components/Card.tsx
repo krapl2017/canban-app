@@ -119,19 +119,7 @@ export default function Card({
         }}
       />
 
-      <button
-        onClick={() => setIsDeleteOpen(true)}
-        style={{
-          position: "absolute",
-          top: 5,
-          right: 5,
-          background: "red",
-          color: "white",
-        }}
-      >
-        X
-      </button>
-
+        {/** модалка редактирования */}
       <Modal open={isOpen} onClose={closeModal}>
         {/* textarea */}
         <textarea
@@ -210,6 +198,7 @@ export default function Card({
         </div>
       </Modal>
 
+        {/** подтверждение удаления */}
       <Modal open={isDeleteOpen} onClose={closeDeleteModal}>
         <h3>Точно удалить карточку?</h3>
 
