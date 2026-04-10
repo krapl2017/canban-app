@@ -13,6 +13,7 @@ import {
   useSensors,
   closestCenter,
 } from "@dnd-kit/core";
+import Modal from "../components/Modal";
 
 export default function BoardPage() {
   const { id } = useParams();
@@ -21,6 +22,10 @@ export default function BoardPage() {
   const [activeCard, setActiveCard] = useState<any>(null);
   const [columnTitle, setColumnTitle] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCreateCardOpen, setIsCreateCardOpen] = useState(false);
+  const [newCardTitle, setNewCardTitle] = useState("");
+  const [selectedColumnId, setSelectedColumnId] = useState<number | null>(null);
+
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: { distance: isModalOpen ? 9999 : 5 },
@@ -54,15 +59,21 @@ export default function BoardPage() {
     dispatch(fetchBoardById(id!));
   };
 
-  const handleCreateCard = async (columnId: number) => {
-    const title = prompt("Название карточки");
-    if (!title) return;
+  const handleCreateCard = (columnId: number) => {
+    setSelectedColumnId(columnId);
+    setIsCreateCardOpen(true);
+  };
+
+  const handleSaveCard = async () => {
+    if (!newCardTitle || !selectedColumnId) return;
 
     await createCard({
-      title,
-      column_id: columnId,
+      title: newCardTitle,
+      column_id: selectedColumnId,
     });
 
+    setNewCardTitle("");
+    setIsCreateCardOpen(false);
     dispatch(fetchBoardById(id!));
   };
 
@@ -213,6 +224,40 @@ export default function BoardPage() {
           ) : null}
         </DragOverlay>
       </DndContext>
+      <Modal
+        open={isCreateCardOpen}
+        onClose={() => setIsCreateCardOpen(false)}
+      >
+        <h3>Новая карточка</h3>
+
+        <textarea
+          value={newCardTitle}
+          onChange={(e) => setNewCardTitle(e.target.value)}
+          placeholder="Название карточки"
+          style={{
+            width: "100%",
+            marginTop: 10,
+            padding: 6,
+          }}
+        />
+
+        <div style={{ marginTop: 20, display: "flex", gap: 10 }}>
+          <button
+            onClick={handleSaveCard}
+            style={{
+              background: "#0079bf",
+              color: "white",
+              padding: "6px 12px",
+            }}
+          >
+            Создать
+          </button>
+
+          <button onClick={() => setIsCreateCardOpen(false)}>
+            Отмена
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 }
