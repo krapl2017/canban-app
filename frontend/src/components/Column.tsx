@@ -15,23 +15,16 @@ import { useRef, useEffect } from "react";
 
 export default function Column({ column, onAddCard, refresh, setGlobalModalOpen }: any) {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const [isEditOpen, setIsEditOpen] = useState(false);
-  const [newTitle, setNewTitle] = useState(column.title);
   const [isAdding, setIsAdding] = useState(false);
   const [title, setTitle] = useState("");
   const addRef = useRef<HTMLDivElement | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editTitle, setEditTitle] = useState(column.title);
+  const editRef = useRef<HTMLDivElement | null>(null);
 
   const handleDeleteColumn = async () => {
     await deleteColumn(column.id);
     setIsDeleteOpen(false);
-    refresh();
-  };
-
-  const handleEditColumn = async () => {
-    if (!newTitle) return;
-
-    await updateColumn(column.id, { title: newTitle });
-    setIsEditOpen(false);
     refresh();
   };
 
@@ -71,6 +64,42 @@ export default function Column({ column, onAddCard, refresh, setGlobalModalOpen 
     };
   }, [isAdding, title]);
 
+  const handleSaveTitle = async () => {
+    const trimmed = editTitle.trim();
+
+    if (!trimmed) {
+      setEditTitle(column.title); // откат
+      setIsEditing(false);
+      return;
+    }
+
+    if (trimmed !== column.title) {
+      await updateColumn(column.id, { title: trimmed });
+      refresh();
+    }
+
+    setIsEditing(false);
+  };
+
+  {/** клики вне редактирования названия колонки */}
+  useEffect(() => {
+    if (!isEditing) return;
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (!editRef.current) return;
+
+      if (!editRef.current.contains(e.target as Node)) {
+        handleSaveTitle();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isEditing, editTitle]);  
+
   return (
     <div
       ref={setNodeRef}
@@ -82,16 +111,41 @@ export default function Column({ column, onAddCard, refresh, setGlobalModalOpen 
         position: "relative",
       }}
     >
-      {/** колонка и кнопка удаления*/}
-      <h3
-        onClick={() => {
-          setNewTitle(column.title);
-          setIsEditOpen(true);
-        }}
-        style={{ cursor: "pointer" }}
-      >
-        {column.title}
-      </h3>
+      {/** название колонки */}
+      <div ref={editRef}>
+        {isEditing ? (
+          <input
+            value={editTitle}
+            onChange={(e) => setEditTitle(e.target.value)}
+            autoFocus
+            onFocus={(e) => e.target.select()}
+            style={{
+              width: "100%",
+              fontSize: 18,
+              fontWeight: "bold",
+              padding: 4,
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleSaveTitle();
+              if (e.key === "Escape") {
+                setEditTitle(column.title);
+                setIsEditing(false);
+              }
+            }}
+          />
+        ) : (
+          <h3
+            onClick={() => {
+              setEditTitle(column.title);
+              setIsEditing(true);
+            }}
+            style={{ cursor: "pointer" }}
+          >
+            {column.title}
+          </h3>
+        )}
+      </div>
+      {/** удаление колонки */}
       <button
         onClick={() => setIsDeleteOpen(true)}
         style={{
@@ -179,37 +233,6 @@ export default function Column({ column, onAddCard, refresh, setGlobalModalOpen 
           </button>
 
           <button onClick={() => setIsDeleteOpen(false)}>
-            Отмена
-          </button>
-        </div>
-      </Modal>
-
-      <Modal open={isEditOpen} onClose={() => setIsEditOpen(false)}>
-        <h3>Редактировать колонку</h3>
-
-        <input
-          value={newTitle}
-          onChange={(e) => setNewTitle(e.target.value)}
-          style={{
-            width: "100%",
-            marginTop: 10,
-            padding: 6,
-          }}
-        />
-
-        <div style={{ marginTop: 20, display: "flex", gap: 10 }}>
-          <button
-            onClick={handleEditColumn}
-            style={{
-              background: "#0079bf",
-              color: "white",
-              padding: "6px 12px",
-            }}
-          >
-            Сохранить
-          </button>
-
-          <button onClick={() => setIsEditOpen(false)}>
             Отмена
           </button>
         </div>
