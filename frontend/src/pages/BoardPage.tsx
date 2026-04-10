@@ -13,7 +13,6 @@ import {
   useSensors,
   closestCenter,
 } from "@dnd-kit/core";
-import Modal from "../components/Modal";
 
 export default function BoardPage() {
   const { id } = useParams();
