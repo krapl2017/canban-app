@@ -7,17 +7,19 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-
 import Card from "./Card";
 import SortableCard from "./SortableCard";
-
 import { useState } from "react";
 import Modal from "./Modal";
+import { useRef, useEffect } from "react";
 
 export default function Column({ column, onAddCard, refresh, setGlobalModalOpen }: any) {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [newTitle, setNewTitle] = useState(column.title);
+  const [isAdding, setIsAdding] = useState(false);
+  const [title, setTitle] = useState("");
+  const addRef = useRef<HTMLDivElement | null>(null);
 
   const handleDeleteColumn = async () => {
     await deleteColumn(column.id);
@@ -37,6 +39,38 @@ export default function Column({ column, onAddCard, refresh, setGlobalModalOpen 
     id: column.id,
   });
 
+  const handleAdd = async () => {
+    if (!title.trim()) return;
+
+    await onAddCard(column.id, title);
+
+    setTitle("");
+    setIsAdding(false);
+  };
+
+  useEffect(() => {
+    if (!isAdding) return;
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (!addRef.current) return;
+
+      if (!addRef.current.contains(e.target as Node)) {
+        // клик вне блока
+        if (title.trim()) {
+          handleAdd();
+        } else {
+          setIsAdding(false);
+        }
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isAdding, title]);
+
   return (
     <div
       ref={setNodeRef}
@@ -48,6 +82,7 @@ export default function Column({ column, onAddCard, refresh, setGlobalModalOpen 
         position: "relative",
       }}
     >
+      {/** колонка и кнопка удаления*/}
       <h3
         onClick={() => {
           setNewTitle(column.title);
@@ -57,7 +92,6 @@ export default function Column({ column, onAddCard, refresh, setGlobalModalOpen 
       >
         {column.title}
       </h3>
-
       <button
         onClick={() => setIsDeleteOpen(true)}
         style={{
@@ -71,6 +105,7 @@ export default function Column({ column, onAddCard, refresh, setGlobalModalOpen 
         X
       </button>
 
+      {/** блок перетаскивания - фактическое содержимое колонки */}
       <SortableContext
         items={column.cards.map((c: any) => c.id)}
         strategy={verticalListSortingStrategy}
@@ -87,9 +122,46 @@ export default function Column({ column, onAddCard, refresh, setGlobalModalOpen 
         ))}
       </SortableContext>
 
-      <button onClick={() => onAddCard(column.id)}>
-        + Добавить карточку
-      </button>
+        {/** добавление карточки */}
+      {isAdding ? (
+        <div ref={addRef} style={{ marginTop: 10 }}>
+          <input
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Название карточки"
+            autoFocus
+            style={{
+              width: "100%",
+              padding: 6,
+              marginBottom: 5,
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleAdd();
+            }}
+          />
+
+          <div style={{ display: "flex", gap: 5 }}>
+            <button
+              onClick={handleAdd}
+              style={{
+                background: "#0079bf",
+                color: "white",
+                padding: "4px 8px",
+              }}
+            >
+              Добавить
+            </button>
+
+            <button onClick={() => setIsAdding(false)}>
+              X
+            </button>
+          </div>
+        </div>
+      ) : (
+        <button onClick={() => setIsAdding(true)}>
+          + Добавить карточку
+        </button>
+      )}
 
       <Modal open={isDeleteOpen} onClose={() => setIsDeleteOpen(false)}>
         <h3>Удалить колонку?</h3>

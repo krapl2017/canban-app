@@ -22,26 +22,12 @@ export default function BoardPage() {
   const [activeCard, setActiveCard] = useState<any>(null);
   const [columnTitle, setColumnTitle] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isCreateCardOpen, setIsCreateCardOpen] = useState(false);
-  const [newCardTitle, setNewCardTitle] = useState("");
-  const [selectedColumnId, setSelectedColumnId] = useState<number | null>(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: { distance: isModalOpen ? 9999 : 5 },
     })
   );
-
-  const handleDragStart = (event: any) => {
-    const { active } = event;
-    const id = Number(active.id);
-
-    const card = board.columns
-      .flatMap((col: any) => col.cards)
-      .find((c: any) => c.id === id);
-
-    setActiveCard(card);
-  };
 
   useEffect(() => {
     dispatch(fetchBoardById(id!));
@@ -59,22 +45,24 @@ export default function BoardPage() {
     dispatch(fetchBoardById(id!));
   };
 
-  const handleCreateCard = (columnId: number) => {
-    setSelectedColumnId(columnId);
-    setIsCreateCardOpen(true);
-  };
-
-  const handleSaveCard = async () => {
-    if (!newCardTitle || !selectedColumnId) return;
-
+  const handleCreateCard = async (columnId: number, title: string) => {
     await createCard({
-      title: newCardTitle,
-      column_id: selectedColumnId,
+      title,
+      column_id: columnId,
     });
 
-    setNewCardTitle("");
-    setIsCreateCardOpen(false);
     dispatch(fetchBoardById(id!));
+  };
+
+  const handleDragStart = (event: any) => {
+    const { active } = event;
+    const id = Number(active.id);
+
+    const card = board.columns
+      .flatMap((col: any) => col.cards)
+      .find((c: any) => c.id === id);
+
+    setActiveCard(card);
   };
 
   const handleDragEnd = async (event: any) => {
@@ -224,40 +212,6 @@ export default function BoardPage() {
           ) : null}
         </DragOverlay>
       </DndContext>
-      <Modal
-        open={isCreateCardOpen}
-        onClose={() => setIsCreateCardOpen(false)}
-      >
-        <h3>Новая карточка</h3>
-
-        <textarea
-          value={newCardTitle}
-          onChange={(e) => setNewCardTitle(e.target.value)}
-          placeholder="Название карточки"
-          style={{
-            width: "100%",
-            marginTop: 10,
-            padding: 6,
-          }}
-        />
-
-        <div style={{ marginTop: 20, display: "flex", gap: 10 }}>
-          <button
-            onClick={handleSaveCard}
-            style={{
-              background: "#0079bf",
-              color: "white",
-              padding: "6px 12px",
-            }}
-          >
-            Создать
-          </button>
-
-          <button onClick={() => setIsCreateCardOpen(false)}>
-            Отмена
-          </button>
-        </div>
-      </Modal>
     </div>
   );
 }
