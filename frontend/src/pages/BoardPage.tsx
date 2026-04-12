@@ -188,50 +188,92 @@ export default function BoardPage() {
   if (!board) return <div>Loading...</div>;
 
   return (
-    <div style={{ padding: 20 }}>
-      <div ref={titleRef} style={{ marginBottom: 10 }}>
-        {isEditingTitle ? (
-          <input
-            value={editTitle}
-            onChange={(e) => setEditTitle(e.target.value)}
-            autoFocus
-            style={{
-              fontSize: 24,
-              fontWeight: "bold",
-              padding: 4,
-              width: "100%",
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") handleSaveBoardTitle();
-              if (e.key === "Escape") {
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
+      <div style={{ marginBottom: 20 }}>
+        <div ref={titleRef}>
+          {isEditingTitle ? (
+            <input
+              value={editTitle}
+              onChange={(e) => setEditTitle(e.target.value)}
+              autoFocus
+              style={{
+                fontSize: 26,
+                fontWeight: "bold",
+                padding: "6px 10px",
+                borderRadius: 10,
+                border: "1px solid #ddd",
+                outline: "none",
+                textAlign: "center",
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleSaveBoardTitle();
+                if (e.key === "Escape") {
+                  setEditTitle(board.title);
+                  setIsEditingTitle(false);
+                }
+              }}
+            />
+          ) : (
+            <div
+              onClick={() => {
                 setEditTitle(board.title);
-                setIsEditingTitle(false);
-              }
-            }}
-            onFocus={(e) => e.target.select()}
-          />
-        ) : (
-          <h1
-            onClick={() => {
-              setEditTitle(board.title);
-              setIsEditingTitle(true);
-            }}
-            style={{ cursor: "pointer" }}
-          >
-            {board.title}
-          </h1>
-        )}
+                setIsEditingTitle(true);
+              }}
+              style={{
+                cursor: "pointer",
+                fontSize: 26,
+                fontWeight: 600,
+                padding: "6px 12px",
+                borderRadius: 12,
+                background: "#fff",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+              }}
+            >
+              {board.title}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* добавление колонки */}
-      <div style={{ marginBottom: 20 }}>
+      <div
+        style={{
+          display: "flex",
+          gap: 10,
+          marginBottom: 30,
+        }}
+      >
         <input
           value={columnTitle}
           onChange={(e) => setColumnTitle(e.target.value)}
           placeholder="Новая колонка"
+          style={{
+            padding: "10px 14px",
+            borderRadius: 10,
+            border: "1px solid #ddd",
+            outline: "none",
+            width: 220,
+          }}
         />
-        <button onClick={handleCreateColumn}>
-          Добавить колонку
+
+        <button
+          onClick={handleCreateColumn}
+          style={{
+            background: "#f4a261",
+            color: "white",
+            border: "none",
+            padding: "10px 16px",
+            borderRadius: 10,
+            cursor: "pointer",
+          }}
+        >
+          Добавить
         </button>
       </div>
 
@@ -247,7 +289,16 @@ export default function BoardPage() {
         onDragCancel={() => setActiveCard(null)}
         
       >
-        <div style={{ display: "flex", gap: 20 }}>
+        <div
+          style={{
+            display: "flex",
+            gap: 20,
+            alignItems: "flex-start", // 💥 ВОТ ЭТО ФИКСИТ ВЫСОТУ
+            overflowX: "auto",
+            width: "100%",
+            paddingBottom: 10,
+          }}
+        >
           {board.columns.map((col: any) => (
             <Column
               key={col.id}
@@ -263,18 +314,18 @@ export default function BoardPage() {
             <div
               style={{
                 background: "white",
-                padding: 8,
-                borderRadius: 6,
+                padding: 10,
+                borderRadius: 12,
                 width: 250,
-                boxShadow: "0 8px 20px rgba(0,0,0,0.2)",
+                boxShadow: "0 10px 25px rgba(0,0,0,0.15)",
               }}
             >
-              <div style={{ fontWeight: "bold" }}>
+              <div style={{ fontWeight: 600 }}>
                 {activeCard.title}
               </div>
 
               {activeCard.description && (
-                <div style={{ marginTop: 4 }}>
+                <div style={{ marginTop: 4, color: "#555" }}>
                   {activeCard.description}
                 </div>
               )}

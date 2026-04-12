@@ -104,15 +104,26 @@ export default function Column({ column, onAddCard, refresh, setGlobalModalOpen 
     <div
       ref={setNodeRef}
       style={{
-        background: "#ebecf0",
-        padding: 10,
-        borderRadius: 8,
-        width: 250,
+        background: "#fdf6f0",
+        padding: 12,
+        borderRadius: 16,
+        width: 260,
         position: "relative",
+        boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+        display: "flex",
+        flexDirection: "column",
+        gap: 10,
       }}
     >
       {/** название колонки */}
-      <div ref={editRef}>
+      <div
+        ref={editRef}
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
         {isEditing ? (
           <input
             value={editTitle}
@@ -121,9 +132,13 @@ export default function Column({ column, onAddCard, refresh, setGlobalModalOpen 
             onFocus={(e) => e.target.select()}
             style={{
               width: "100%",
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: "bold",
-              padding: 4,
+              padding: 6,
+              borderRadius: 8,
+              border: "1px solid #ddd",
+              outline: "none",
+              background: "#fff",
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter") handleSaveTitle();
@@ -139,7 +154,12 @@ export default function Column({ column, onAddCard, refresh, setGlobalModalOpen 
               setEditTitle(column.title);
               setIsEditing(true);
             }}
-            style={{ cursor: "pointer" }}
+            style={{
+              cursor: "pointer",
+              fontSize: 16,
+              fontWeight: 600,
+              margin: 0,
+            }}
           >
             {column.title}
           </h3>
@@ -152,33 +172,48 @@ export default function Column({ column, onAddCard, refresh, setGlobalModalOpen 
           position: "absolute",
           top: 5,
           right: 5,
-          background: "red",
-          color: "white",
+          marginLeft: 8,
+          border: "none",
+          background: "transparent",
+          cursor: "pointer",
+          fontSize: 16,
+          color: "#c96",
         }}
       >
-        X
+        ✕
       </button>
 
       {/** блок перетаскивания - фактическое содержимое колонки */}
-      <SortableContext
-        items={column.cards.map((c: any) => c.id)}
-        strategy={verticalListSortingStrategy}
-      >
-        {column.cards.map((card: any) => (
-          <SortableCard key={card.id} id={card.id}>
-            <Card
-              card={card}
-              columnId={column.id}
-              refresh={refresh}
-              setGlobalModalOpen={setGlobalModalOpen}
-            />
-          </SortableCard>
-        ))}
-      </SortableContext>
+      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        <SortableContext
+          items={column.cards.map((c: any) => c.id)}
+          strategy={verticalListSortingStrategy}
+        >
+          {column.cards.map((card: any) => (
+            <SortableCard key={card.id} id={card.id}>
+              <Card
+                card={card}
+                columnId={column.id}
+                refresh={refresh}
+                setGlobalModalOpen={setGlobalModalOpen}
+              />
+            </SortableCard>
+          ))}
+        </SortableContext>
+      </div>
 
-        {/** добавление карточки */}
+      {/** добавление карточки */}
       {isAdding ? (
-        <div ref={addRef} style={{ marginTop: 10 }}>
+        <div
+          ref={addRef}
+          style={{
+            marginTop: 10,
+            background: "#fff",
+            padding: 8,
+            borderRadius: 10,
+            boxShadow: "0 2px 6px rgba(0,0,0,0.05)",
+          }}
+        >
           <input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -186,33 +221,58 @@ export default function Column({ column, onAddCard, refresh, setGlobalModalOpen 
             autoFocus
             style={{
               width: "100%",
-              padding: 6,
-              marginBottom: 5,
+              padding: 8,
+              borderRadius: 8,
+              border: "1px solid #ddd",
+              marginBottom: 6,
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter") handleAdd();
             }}
           />
 
-          <div style={{ display: "flex", gap: 5 }}>
+          <div style={{ display: "flex", gap: 6 }}>
             <button
               onClick={handleAdd}
               style={{
-                background: "#0079bf",
+                background: "#f4a261",
                 color: "white",
-                padding: "4px 8px",
+                border: "none",
+                borderRadius: 8,
+                padding: "6px 10px",
+                cursor: "pointer",
               }}
             >
               Добавить
             </button>
 
-            <button onClick={() => setIsAdding(false)}>
-              X
+            <button
+              onClick={() => setIsAdding(false)}
+              style={{
+                border: "none",
+                background: "transparent",
+                cursor: "pointer",
+                fontSize: 16,
+              }}
+            >
+              ✕
             </button>
           </div>
         </div>
       ) : (
-        <button onClick={() => setIsAdding(true)}>
+        <button
+          onClick={() => setIsAdding(true)}
+          style={{
+            marginTop: 10,
+            background: "transparent",
+            border: "none",
+            color: "#a67c52",
+            cursor: "pointer",
+            textAlign: "left",
+            padding: "6px 4px",
+            borderRadius: 8,
+          }}
+        >
           + Добавить карточку
         </button>
       )}
@@ -224,15 +284,26 @@ export default function Column({ column, onAddCard, refresh, setGlobalModalOpen 
           <button
             onClick={handleDeleteColumn}
             style={{
-              background: "red",
+              background: "#e76f51",
               color: "white",
               padding: "6px 12px",
+              borderRadius: 8,
+              border: "none",
             }}
           >
             Удалить
           </button>
 
-          <button onClick={() => setIsDeleteOpen(false)}>
+          <button
+            onClick={() => setIsDeleteOpen(false)}
+            style={{
+              padding: "8px 14px",
+              borderRadius: 8,
+              border: "1px solid #ddd",
+              cursor: "pointer",
+              background: "white",
+            }}
+          >
             Отмена
           </button>
         </div>
