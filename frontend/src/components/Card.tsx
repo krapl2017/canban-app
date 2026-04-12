@@ -69,132 +69,170 @@ export default function Card({
 
   return (
     <div
+      onClick={openModal}
       style={{
-        background: "white",
-        padding: 8,
-        marginBottom: 8,
-        borderRadius: 4,
-        position: "relative",
+        background: "#fff",
+        padding: 10,
+        borderRadius: 12,
+        cursor: "pointer",
+        boxShadow: "0 2px 6px rgba(0,0,0,0.06)",
+        transition: "all 0.2s ease",
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.boxShadow =
+          "0 6px 16px rgba(0,0,0,0.12)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.boxShadow =
+          "0 2px 6px rgba(0,0,0,0.06)";
       }}
     >
-      <div onClick={openModal} style={{ cursor: "pointer" }}>
-        <div style={{ fontWeight: "bold" }}>{card.title}</div>
-
-        {card.description && (
-          <div style={{ marginTop: 4 }}>
-            {card.description}
-          </div>
-        )}
+      {/* заголовок */}
+      <div
+        style={{
+          fontWeight: 600,
+          fontSize: 14,
+          marginBottom: card.description ? 4 : 0,
+        }}
+      >
+        {card.title}
       </div>
 
-      {card.images?.map((img: any) => (
-        <div key={img.id} style={{ position: "relative" }}>
-          <img
-            src={`http://127.0.0.1:8000/storage/${img.path}`}
-            style={{ width: "100%", marginTop: 5 }}
+      {card.description && (
+        <div
+          style={{
+            fontSize: 13,
+            color: "#555",
+            overflow: "hidden",
+            display: "-webkit-box",
+            WebkitLineClamp: 1,
+            WebkitBoxOrient: "vertical",
+          }}
+        >
+          {card.description}
+        </div>
+      )}
+
+      {/** модалка редактирования */}
+      <Modal open={isOpen} onClose={closeModal}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <textarea
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            style={{
+              width: "100%",
+              minHeight: 150,
+              padding: 12,
+              fontSize: 14,
+              borderRadius: 10,
+              border: "1px solid #ddd",
+              outline: "none",
+              resize: "none",
+            }}
           />
 
-          <button
-            onClick={() => handleDeleteImage(img.id)}
-            style={{
-              position: "absolute",
-              top: 5,
-              right: 5,
-              background: "red",
-              color: "white",
-            }}
-          >
-            X
-          </button>
-        </div>
-      ))}
-
-      <input
-        type="file"
-        onChange={async (e) => {
-          if (!e.target.files?.[0]) return;
-
-          await uploadImage(card.id, e.target.files[0]);
-          refresh();
-        }}
-      />
-
-        {/** модалка редактирования */}
-      <Modal open={isOpen} onClose={closeModal}>
-        {/* textarea */}
-        <textarea
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          style={{
-            width: "100%",
-            minHeight: 120,
-            padding: 10,
-            fontSize: 14,
-          }}
-        />
-
-        {/* изображения */}
-        <div style={{ marginTop: 10 }}>
-          {card.images?.map((img: any) => (
-            <div key={img.id} style={{ position: "relative" }}>
-              <img
-                src={`http://127.0.0.1:8000/storage/${img.path}`}
-                style={{ width: "100%", marginTop: 5 }}
-              />
-
-              <button
-                onClick={() => handleDeleteImage(img.id)}
+          {/* изображения */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {card.images?.map((img: any) => (
+              <div
+                key={img.id}
                 style={{
-                  position: "absolute",
-                  top: 5,
-                  right: 5,
-                  background: "red",
-                  color: "white",
+                  position: "relative",
+                  borderRadius: 10,
+                  overflow: "hidden",
                 }}
               >
-                X
-              </button>
-            </div>
-          ))}
-        </div>
+                <img
+                  src={`http://127.0.0.1:8000/storage/${img.path}`}
+                  style={{
+                    width: "25%",
+                    display: "block",
+                  }}
+                />
 
-        {/* загрузка */}
-        <input
-          type="file"
-          onChange={(e) => {
-            if (!e.target.files?.[0]) return;
-            handleUpload(e.target.files[0]);
-          }}
-          style={{ marginTop: 10 }}
-        />
+                <button
+                  onClick={() => handleDeleteImage(img.id)}
+                  style={{
+                    position: "absolute",
+                    top: 6,
+                    right: 6,
+                    background: "rgba(0,0,0,0.6)",
+                    color: "white",
+                    border: "none",
+                    borderRadius: 6,
+                    padding: "2px 6px",
+                    cursor: "pointer",
+                  }}
+                >
+                  ✕
+                </button>
+              </div>
+            ))}
+          </div>
 
-        {/* кнопки */}
-        <div style={{ marginTop: 20, display: "flex", gap: 10 }}>
-          <button
-            onClick={handleSave}
+          {/* загрузка */}
+          <label
             style={{
-              background: "#0079bf",
+              padding: 10,
+              borderRadius: 10,
+              background: "#f4a261",
               color: "white",
-              padding: "6px 12px",
+              textAlign: "center",
+              cursor: "pointer",
             }}
           >
-            Сохранить
-          </button>
+            + Добавить изображение
+            <input
+              type="file"
+              hidden
+              onChange={(e) => {
+                if (!e.target.files?.[0]) return;
+                handleUpload(e.target.files[0]);
+              }}
+            />
+          </label>
 
-          <button
-            onClick={() => setIsDeleteOpen(true)}
-            style={{
-              background: "red",
-              color: "white",
-              padding: "6px 12px",
-            }}
-          >
-            Удалить
-          </button>
+          {/* кнопки */}
+          <div style={{ marginTop: 20, display: "flex", gap: 10 }}>
+            <button
+              onClick={handleSave}
+              style={{
+                background: "#f4a261",
+                color: "white",
+                padding: "6px 12px",
+                borderRadius: 8,
+                border: "none",
+              }}
+            >
+              Сохранить
+            </button>
 
-          <button onClick={() => setIsOpen(false)}>
-            Закрыть
-          </button>
+            <button
+              onClick={() => setIsDeleteOpen(true)}
+              style={{
+                background: "#e76f51",
+                color: "white",
+                padding: "6px 12px",
+                borderRadius: 8,
+                border: "none",
+              }}
+            >
+              Удалить
+            </button>
+
+            <button
+              onClick={() => setIsOpen(false)}
+              style={{
+                padding: "8px 14px",
+                borderRadius: 8,
+                border: "1px solid #ddd",
+                cursor: "pointer",
+                background: "white",
+              }}  
+            >
+              Закрыть
+            </button>
+          </div>
         </div>
       </Modal>
 
@@ -206,15 +244,26 @@ export default function Card({
           <button
             onClick={handleDeleteCard}
             style={{
-              background: "red",
+              background: "#e76f51",
               color: "white",
               padding: "6px 12px",
+              borderRadius: 8,
+              border: "none",
             }}
           >
             Удалить
           </button>
 
-          <button onClick={closeDeleteModal}>
+          <button
+            onClick={closeDeleteModal}
+            style={{
+              padding: "8px 14px",
+              borderRadius: 8,
+              border: "1px solid #ddd",
+              cursor: "pointer",
+              background: "white",
+            }}
+          >
             Отмена
           </button>
         </div>

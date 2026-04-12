@@ -293,7 +293,7 @@ export default function BoardPage() {
           style={{
             display: "flex",
             gap: 20,
-            alignItems: "flex-start", // 💥 ВОТ ЭТО ФИКСИТ ВЫСОТУ
+            alignItems: "flex-start",
             overflowX: "auto",
             width: "100%",
             paddingBottom: 10,
