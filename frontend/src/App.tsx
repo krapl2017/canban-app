@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import BoardsPage from "./pages/BoardsPage";
 import BoardPage from "./pages/BoardPage";
 import Layout from "./components/Layout";
+import NotFoundPage from "./pages/NotFoundPage";
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
         <Routes>
           <Route path="/" element={<BoardsPage />} />
           <Route path="/boards/:id" element={<BoardPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
     </Layout>
     </BrowserRouter>
