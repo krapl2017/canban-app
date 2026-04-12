@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { createColumn, createCard, reorderCards } from "../api/api";
+import { createColumn, createCard, reorderCards, updateBoard } from "../api/api";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBoardById, setBoard } from "../features/boards/boardSlice";
 import type { RootState } from "../app/store";
@@ -13,6 +13,7 @@ import {
   useSensors,
   closestCenter,
 } from "@dnd-kit/core";
+import { useRef } from "react";
 
 export default function BoardPage() {
   const { id } = useParams();
@@ -21,6 +22,9 @@ export default function BoardPage() {
   const [activeCard, setActiveCard] = useState<any>(null);
   const [columnTitle, setColumnTitle] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [editTitle, setEditTitle] = useState("");
+  const titleRef = useRef<HTMLDivElement | null>(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -145,12 +149,79 @@ export default function BoardPage() {
     }
   };
 
+  const handleSaveBoardTitle = async () => {
+    const trimmed = editTitle.trim();
+
+    if (!trimmed) {
+      setEditTitle(board.title); // откат
+      setIsEditingTitle(false);
+      return;
+    }
+
+    if (trimmed !== board.title) {
+      await updateBoard(board.id, {title: trimmed});
+
+      dispatch(fetchBoardById(id!));
+    }
+
+    setIsEditingTitle(false);
+  };
+
+  useEffect(() => {
+    if (!isEditingTitle) return;
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (!titleRef.current) return;
+
+      if (!titleRef.current.contains(e.target as Node)) {
+        handleSaveBoardTitle();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isEditingTitle, editTitle]);
 
   if (!board) return <div>Loading...</div>;
 
   return (
     <div style={{ padding: 20 }}>
-      <h1>{board.title}</h1>
+      <div ref={titleRef} style={{ marginBottom: 10 }}>
+        {isEditingTitle ? (
+          <input
+            value={editTitle}
+            onChange={(e) => setEditTitle(e.target.value)}
+            autoFocus
+            style={{
+              fontSize: 24,
+              fontWeight: "bold",
+              padding: 4,
+              width: "100%",
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleSaveBoardTitle();
+              if (e.key === "Escape") {
+                setEditTitle(board.title);
+                setIsEditingTitle(false);
+              }
+            }}
+            onFocus={(e) => e.target.select()}
+          />
+        ) : (
+          <h1
+            onClick={() => {
+              setEditTitle(board.title);
+              setIsEditingTitle(true);
+            }}
+            style={{ cursor: "pointer" }}
+          >
+            {board.title}
+          </h1>
+        )}
+      </div>
 
       {/* добавление колонки */}
       <div style={{ marginBottom: 20 }}>

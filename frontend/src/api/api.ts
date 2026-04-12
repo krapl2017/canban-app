@@ -44,3 +44,6 @@ export const reorderCards = (cards: {
   id: number;
   column_id: number;
 }[]) => api.post("/cards/reorder", { cards });
+
+export const updateBoard = (id: number, data: { title: string }) =>
+  api.put(`/boards/${id}`, data);

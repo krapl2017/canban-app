@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\ImageController;
 
 Route::get('/boards', [BoardController::class, 'index']);
 Route::post('/boards', [BoardController::class, 'store']);
+Route::put('/boards/{id}', [ColumnController::class, 'update']);
 Route::get('/boards/{id}', [BoardController::class, 'show']);
 Route::delete('/boards/{id}', [BoardController::class, 'destroy']);
 

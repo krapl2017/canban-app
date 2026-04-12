@@ -38,4 +38,13 @@ class BoardController extends Controller
 
         return response()->json(['success' => true]);
     }
+
+    public function update(Request $request, $id)
+    {
+        $board = Board::findOrFail($id);
+
+        $board->update($request->only('title'));
+
+        return $board;
+    }
 }
