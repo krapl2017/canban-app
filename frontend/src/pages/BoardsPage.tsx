@@ -30,7 +30,6 @@ export default function BoardsPage() {
   return (
     <div
       style={{
-        minHeight: "100vh",
         background: "#f7f3ef",
         padding: 20,
         display: "flex",

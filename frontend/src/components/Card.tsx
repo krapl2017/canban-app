@@ -113,6 +113,12 @@ export default function Card({
         </div>
       )}
 
+      {card.images?.length > 0 && (
+        <div style={{ fontSize: 12, color: "#999", marginTop: 6 }}>
+          📎 {card.images.length}
+        </div>
+      )}
+
       {/** модалка редактирования */}
       <Modal open={isOpen} onClose={closeModal}>
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>

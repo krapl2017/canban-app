@@ -9,6 +9,7 @@ export default function Layout({ children }: any) {
         display: "flex",
         flexDirection: "column",
         background: "#f7f3ef",
+        maxHeight: "100%"
       }}
     >
       <Navbar />
@@ -18,6 +19,9 @@ export default function Layout({ children }: any) {
         style={{
           flex: 1,
           padding: 20,
+          justifyContent: "center",
+          overflow: "hidden",
+          display: "flex",
         }}
       >
         {children}

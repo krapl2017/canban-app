@@ -190,12 +190,20 @@ export default function BoardPage() {
   return (
     <div
       style={{
+        flex: 1,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        overflow: "hidden",
       }}
     >
-      <div style={{ marginBottom: 20 }}>
+      <div
+        style={{
+          marginBottom: 20,
+          padding: 20,
+          flexShrink: 0,
+        }}
+      >
         <div ref={titleRef}>
           {isEditingTitle ? (
             <input
@@ -247,6 +255,7 @@ export default function BoardPage() {
           display: "flex",
           gap: 10,
           marginBottom: 30,
+          flexShrink: 0
         }}
       >
         <input
@@ -278,61 +287,77 @@ export default function BoardPage() {
       </div>
 
       {/* колонки */}
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragStart={handleDragStart}
-        onDragEnd={(e) => {
-          handleDragEnd(e);
-          setActiveCard(null);
+      <div
+        style={{
+          flex: 1,
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          overflow: "hidden",
         }}
-        onDragCancel={() => setActiveCard(null)}
-        
       >
         <div
           style={{
-            display: "flex",
-            gap: 20,
-            alignItems: "flex-start",
+            flex: 1,
             overflowX: "auto",
-            width: "100%",
-            paddingBottom: 10,
+            overflowY: "hidden",
           }}
         >
-          {board.columns.map((col: any) => (
-            <Column
-              key={col.id}
-              column={col}
-              onAddCard={handleCreateCard}
-              refresh={()=>dispatch(fetchBoardById(id!))}
-              setGlobalModalOpen={setIsModalOpen}
-            />
-          ))}
-        </div>
-        <DragOverlay>
-          {activeCard ? (
-            <div
-              style={{
-                background: "white",
-                padding: 10,
-                borderRadius: 12,
-                width: 250,
-                boxShadow: "0 10px 25px rgba(0,0,0,0.15)",
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragStart={handleDragStart}
+              onDragEnd={(e) => {
+                handleDragEnd(e);
+                setActiveCard(null);
               }}
+              onDragCancel={() => setActiveCard(null)}
+              
             >
-              <div style={{ fontWeight: 600 }}>
-                {activeCard.title}
+              <div
+                style={{
+                  display: "flex",
+                  gap: 20,
+                  alignItems: "flex-start",
+                  paddingBottom: "0 20px",
+                }}
+              >
+                {board.columns.map((col: any) => (
+                  <Column
+                    key={col.id}
+                    column={col}
+                    onAddCard={handleCreateCard}
+                    refresh={()=>dispatch(fetchBoardById(id!))}
+                    setGlobalModalOpen={setIsModalOpen}
+                  />
+                ))}
               </div>
+              <DragOverlay>
+                {activeCard ? (
+                  <div
+                    style={{
+                      background: "white",
+                      padding: 10,
+                      borderRadius: 12,
+                      width: 250,
+                      boxShadow: "0 10px 25px rgba(0,0,0,0.15)",
+                    }}
+                  >
+                    <div style={{ fontWeight: 600 }}>
+                      {activeCard.title}
+                    </div>
 
-              {activeCard.description && (
-                <div style={{ marginTop: 4, color: "#555" }}>
-                  {activeCard.description}
-                </div>
-              )}
-            </div>
-          ) : null}
-        </DragOverlay>
-      </DndContext>
+                    {activeCard.description && (
+                      <div style={{ marginTop: 4, color: "#555" }}>
+                        {activeCard.description}
+                      </div>
+                    )}
+                  </div>
+                ) : null}
+              </DragOverlay>
+            </DndContext>
+        </div>
+      </div>
     </div>
   );
 }

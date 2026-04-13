@@ -109,10 +109,16 @@ export default function Column({ column, onAddCard, refresh, setGlobalModalOpen 
         borderRadius: 16,
         width: 260,
         position: "relative",
+
+        flexShrink: 0,
+
         boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
         display: "flex",
         flexDirection: "column",
         gap: 10,
+
+        height: "100%", 
+        maxHeight: "100%",
       }}
     >
       {/** название колонки */}
@@ -184,22 +190,41 @@ export default function Column({ column, onAddCard, refresh, setGlobalModalOpen 
       </button>
 
       {/** блок перетаскивания - фактическое содержимое колонки */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-        <SortableContext
-          items={column.cards.map((c: any) => c.id)}
-          strategy={verticalListSortingStrategy}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 8,
+        }}
+      >
+        <div
+          style={{
+            overflowY: "auto",
+            overflowX: "hidden",
+            marginTop: 10,
+            flex: 1,
+            minHeight: 0,
+            paddingRight: 4,
+            maxHeight: "500px",
+          }}
         >
-          {column.cards.map((card: any) => (
-            <SortableCard key={card.id} id={card.id}>
-              <Card
-                card={card}
-                columnId={column.id}
-                refresh={refresh}
-                setGlobalModalOpen={setGlobalModalOpen}
-              />
-            </SortableCard>
-          ))}
-        </SortableContext>
+          <SortableContext
+            items={column.cards.map((c: any) => c.id)}
+            strategy={verticalListSortingStrategy}
+          >
+            {column.cards.map((card: any) => (
+              <SortableCard key={card.id} id={card.id}>
+                <Card
+                  card={card}
+                  columnId={column.id}
+                  refresh={refresh}
+                  setGlobalModalOpen={setGlobalModalOpen}
+                />
+              </SortableCard>
+            ))}
+          </SortableContext>
+
+        </div>
       </div>
 
       {/** добавление карточки */}
@@ -207,7 +232,7 @@ export default function Column({ column, onAddCard, refresh, setGlobalModalOpen 
         <div
           ref={addRef}
           style={{
-            marginTop: 10,
+            marginTop: "auto",
             background: "#fff",
             padding: 8,
             borderRadius: 10,
