@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import { deleteBoard } from "../api/api";
+import { deleteBoard } from "../../api/api";
 import { useDispatch } from "react-redux";
-import { fetchBoards } from "../features/boards/boardSlice";
+import { fetchBoards } from "../../features/boards/boardSlice";
 import { useState } from "react";
-import Modal from "./Modal";
+import Modal from "../Modal";
 
 export default function BoardCard({ board }: any) {
   const dispatch = useDispatch<any>();

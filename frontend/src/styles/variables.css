@@ -1,0 +1,16 @@
+:root {
+  --bg-main: #fef6f0;
+  --bg-card: #ffffff;
+  --bg-column: #fdf6f0;
+
+  --primary: #f4a261;
+  --primary-hover: #e76f51;
+
+  --text-main: #333;
+  --text-muted: #777;
+
+  --radius: 12px;
+  --shadow: 0 4px 12px rgba(0,0,0,0.08);
+
+  --transition: 0.2s ease;
+}

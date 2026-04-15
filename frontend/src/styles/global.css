@@ -1,0 +1,11 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: var(--bg-main);
+  color: var(--text-main);
+  overflow: hidden; /* убирает вертикальный скролл */
+}

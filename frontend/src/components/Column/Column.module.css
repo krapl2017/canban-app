@@ -1,0 +1,142 @@
+.container {
+  background: var(--bg-column);
+  padding: 12px;
+  border-radius: 16px;
+  width: 260px;
+  position: relative;
+
+  flex-shrink: 0;
+
+  box-shadow: var(--shadow);
+
+  display: flex;
+  flex-direction: column;
+  gap: 10;
+
+  height: 100%;
+  max-height: 100%;
+}
+
+/* header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+  cursor: pointer;
+}
+
+.titleInput {
+  width: 100%;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 6px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  outline: none;
+  background: #fff;
+}
+
+/* delete button */
+.deleteBtn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 16px;
+
+  color: #c96;
+  transition: 0.2s;
+}
+
+.deleteBtn:hover {
+  color: var(--primary-hover);
+}
+
+/* cards container */
+.cardsWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  min-height: 0;
+}
+
+.cards {
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  flex: 1;
+  min-height: 0;
+
+  padding-right: 4px;
+
+  margin-top: 10px;
+
+  max-height: 500px;
+}
+
+/* add card */
+.addBox {
+  margin-top: auto;
+  background: #fff;
+  padding: 8px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.input {
+  width: 100%;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  margin-bottom: 6px;
+}
+
+.addActions {
+  display: flex;
+  gap: 6px;
+}
+
+.addBtn {
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.addBtn:hover {
+  background: var(--primary-hover);
+}
+
+.cancelBtn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.addTrigger {
+  margin-top: 10px;
+  background: transparent;
+  border: none;
+  color: #a67c52;
+  cursor: pointer;
+  text-align: left;
+  padding: 6px 4px;
+  border-radius: 8px;
+}
+
+.addTrigger:hover {
+  background: rgba(0,0,0,0.05);
+}

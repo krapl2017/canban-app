@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBoards, createBoard } from "../features/boards/boardSlice";
 import type { RootState } from "../app/store";
-import BoardCard from "../components/BoardCard";
+import BoardCard from "../components/BoardCard/BoardCard";
 
 export default function BoardsPage() {
   const dispatch = useDispatch<any>();

@@ -3,10 +3,10 @@ import {
   uploadImage,
   updateCard,
   deleteImage,
-} from "../api/api";
+} from "../../api/api";
 
 import { useState } from "react";
-import Modal from "./Modal";
+import Modal from "../Modal";
 
 export default function Card({
   card,
