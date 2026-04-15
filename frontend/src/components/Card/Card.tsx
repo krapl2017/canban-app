@@ -7,6 +7,7 @@ import {
 
 import { useState } from "react";
 import Modal from "../Modal";
+import styles from "./Card.module.css"
 
 export default function Card({
   card,
@@ -70,71 +71,32 @@ export default function Card({
   return (
     <div
       onClick={openModal}
-      style={{
-        background: "#fff",
-        padding: 10,
-        borderRadius: 12,
-        cursor: "pointer",
-        boxShadow: "0 2px 6px rgba(0,0,0,0.06)",
-        transition: "all 0.2s ease",
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.boxShadow =
-          "0 6px 16px rgba(0,0,0,0.12)";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.boxShadow =
-          "0 2px 6px rgba(0,0,0,0.06)";
-      }}
+      className={styles.card}
     >
       {/* заголовок */}
-      <div
-        style={{
-          fontWeight: 600,
-          fontSize: 14,
-          marginBottom: card.description ? 4 : 0,
-        }}
-      >
+      <div className={styles.cardTitle}>
         {card.title}
       </div>
 
       {card.description && (
-        <div
-          style={{
-            fontSize: 13,
-            color: "#555",
-            overflow: "hidden",
-            display: "-webkit-box",
-            WebkitLineClamp: 1,
-            WebkitBoxOrient: "vertical",
-          }}
-        >
+        <div className={styles.cardDescription}>
           {card.description}
         </div>
       )}
 
       {card.images?.length > 0 && (
-        <div style={{ fontSize: 12, color: "#999", marginTop: 6 }}>
+        <div className={styles.cardImagesCount}>
           📎 {card.images.length}
         </div>
       )}
 
       {/** модалка редактирования */}
       <Modal open={isOpen} onClose={closeModal}>
-        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        <div className={styles.cardModal}>
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
-            style={{
-              width: "100%",
-              minHeight: 150,
-              padding: 12,
-              fontSize: 14,
-              borderRadius: 10,
-              border: "1px solid #ddd",
-              outline: "none",
-              resize: "none",
-            }}
+            className={styles.cardTextarea}
           />
 
           {/* изображения */}
@@ -142,33 +104,16 @@ export default function Card({
             {card.images?.map((img: any) => (
               <div
                 key={img.id}
-                style={{
-                  position: "relative",
-                  borderRadius: 10,
-                  overflow: "hidden",
-                }}
+                className={styles.cardImageWrapper}
               >
                 <img
                   src={`http://127.0.0.1:8000/storage/${img.path}`}
-                  style={{
-                    width: "25%",
-                    display: "block",
-                  }}
+                  className={styles.cardImage}
                 />
 
                 <button
                   onClick={() => handleDeleteImage(img.id)}
-                  style={{
-                    position: "absolute",
-                    top: 6,
-                    right: 6,
-                    background: "rgba(0,0,0,0.6)",
-                    color: "white",
-                    border: "none",
-                    borderRadius: 6,
-                    padding: "2px 6px",
-                    cursor: "pointer",
-                  }}
+                  className={styles.cardImageDelete}
                 >
                   ✕
                 </button>
@@ -177,16 +122,7 @@ export default function Card({
           </div>
 
           {/* загрузка */}
-          <label
-            style={{
-              padding: 10,
-              borderRadius: 10,
-              background: "#f4a261",
-              color: "white",
-              textAlign: "center",
-              cursor: "pointer",
-            }}
-          >
+          <label className={styles.cardUpload}>
             + Добавить изображение
             <input
               type="file"
@@ -199,42 +135,24 @@ export default function Card({
           </label>
 
           {/* кнопки */}
-          <div style={{ marginTop: 20, display: "flex", gap: 10 }}>
+          <div className={styles.cardActions}>
             <button
               onClick={handleSave}
-              style={{
-                background: "#f4a261",
-                color: "white",
-                padding: "6px 12px",
-                borderRadius: 8,
-                border: "none",
-              }}
+              className="button button-primary"
             >
               Сохранить
             </button>
 
             <button
               onClick={() => setIsDeleteOpen(true)}
-              style={{
-                background: "#e76f51",
-                color: "white",
-                padding: "6px 12px",
-                borderRadius: 8,
-                border: "none",
-              }}
+              className="button button-primary"
             >
               Удалить
             </button>
 
             <button
               onClick={() => setIsOpen(false)}
-              style={{
-                padding: "8px 14px",
-                borderRadius: 8,
-                border: "1px solid #ddd",
-                cursor: "pointer",
-                background: "white",
-              }}  
+              className="button" 
             >
               Закрыть
             </button>
@@ -246,29 +164,17 @@ export default function Card({
       <Modal open={isDeleteOpen} onClose={closeDeleteModal}>
         <h3>Точно удалить карточку?</h3>
 
-        <div style={{ marginTop: 20, display: "flex", gap: 10 }}>
+        <div className={styles.cardActions}>
           <button
             onClick={handleDeleteCard}
-            style={{
-              background: "#e76f51",
-              color: "white",
-              padding: "6px 12px",
-              borderRadius: 8,
-              border: "none",
-            }}
+            className="button button-primary"
           >
             Удалить
           </button>
 
           <button
             onClick={closeDeleteModal}
-            style={{
-              padding: "8px 14px",
-              borderRadius: 8,
-              border: "1px solid #ddd",
-              cursor: "pointer",
-              background: "white",
-            }}
+            className="button" 
           >
             Отмена
           </button>
