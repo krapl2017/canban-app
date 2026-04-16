@@ -1,0 +1,67 @@
+.boardCard {
+  background: white;
+  padding: 20px;
+  border-radius: 16px;
+  width: 220px;
+  cursor: pointer;
+  position: relative;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: all 0.2s ease;
+}
+
+.boardCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+/* крестик удаления */
+.deleteBtn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: #999;
+}
+
+.deleteBtn:hover {
+  color: #333;
+}
+
+/* заголовок */
+.title {
+  font-weight: 600;
+  font-size: 16px;
+  color: #333;
+  word-break: break-word;
+}
+
+/* модалка */
+.modalTitle {
+  color: black;
+}
+
+/* кнопки */
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btnDanger {
+  background: #e76f51;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.btnSecondary {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  background: white;
+}

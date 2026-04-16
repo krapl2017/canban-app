@@ -16,6 +16,15 @@
   background: var(--primary-hover);
 }
 
+.button-save {
+  background: #86e283;
+  color: white;
+}
+
+.button-save:hover {
+  background: #4b8d49;
+}
+
 .input {
   padding: 10px 14px;
   border-radius: var(--radius);

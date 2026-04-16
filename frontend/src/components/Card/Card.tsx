@@ -17,13 +17,13 @@ export default function Card({
 }: any) {
 
   const [isOpen, setIsOpen] = useState(false);
-  const [text, setText] = useState(
-    `${card.title}\n${card.description || ""}`
-  );
+  const [title, setTitle] = useState(card.title);
+  const [description, setDescription] = useState(card.description || "");
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
   const openModal = () => {
-    setText(`${card.title}\n${card.description || ""}`);
+    setTitle(card.title);
+    setDescription(card.description || "");
     setIsOpen(true);
     setGlobalModalOpen(true);
   };
@@ -39,11 +39,10 @@ export default function Card({
   };
 
   const handleSave = async () => {
-    const lines = text.split("\n");
 
     await updateCard(card.id, {
-      title: lines[0],
-      description: lines.slice(1).join("\n"),
+      title,
+      description,
       column_id: columnId,
     });
 
@@ -93,14 +92,20 @@ export default function Card({
       {/** модалка редактирования */}
       <Modal open={isOpen} onClose={closeModal}>
         <div className={styles.cardModal}>
+          <input
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className={styles.cardTitleInput}
+          />
+
           <textarea
-            value={text}
-            onChange={(e) => setText(e.target.value)}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
             className={styles.cardTextarea}
           />
 
           {/* изображения */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <div className={styles.cardImages}>
             {card.images?.map((img: any) => (
               <div
                 key={img.id}
@@ -138,7 +143,7 @@ export default function Card({
           <div className={styles.cardActions}>
             <button
               onClick={handleSave}
-              className="button button-primary"
+              className="button button-save"
             >
               Сохранить
             </button>
