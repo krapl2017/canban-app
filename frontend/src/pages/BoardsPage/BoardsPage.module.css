@@ -1,0 +1,70 @@
+.page {
+  background: #f7f3ef;
+  padding: 20px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* блок с юзером */
+.userBlock {
+  margin-bottom: 20px;
+}
+
+.userInput {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  outline: none;
+  width: 220px;
+  text-align: center;
+}
+
+/* заголовок */
+.title {
+  margin-bottom: 20px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* создание доски */
+.createBlock {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.input {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  outline: none;
+  width: 200px;
+}
+
+.createButton {
+  background: #f4a261;
+  border: none;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s ease;
+}
+
+.createButton:hover {
+  background: #e8954f;
+}
+
+/* список досок */
+.boardsList {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 1000px;
+}

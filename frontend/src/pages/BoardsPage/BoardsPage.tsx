@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchBoards, createBoard } from "../features/boards/boardSlice";
-import type { RootState } from "../app/store";
-import BoardCard from "../components/BoardCard/BoardCard";
+import { fetchBoards, createBoard } from "../../features/boards/boardSlice";
+import type { RootState } from "../../app/store";
+import BoardCard from "../../components/BoardCard/BoardCard";
+import styles from "./BoardsPage.module.css";
 
 export default function BoardsPage() {
   const dispatch = useDispatch<any>();

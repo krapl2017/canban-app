@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { createColumn, createCard, reorderCards, updateBoard } from "../api/api";
+import { createColumn, createCard, reorderCards, updateBoard } from "../../api/api";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchBoardById, setBoard } from "../features/boards/boardSlice";
-import type { RootState } from "../app/store";
-import Column from "../components/Column/Column";
+import { fetchBoardById, setBoard } from "../../features/boards/boardSlice";
+import type { RootState } from "../../app/store";
+import Column from "../../components/Column/Column";
 import {
   DndContext,
   DragOverlay,

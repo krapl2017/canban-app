@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import BoardsPage from "./pages/BoardsPage";
-import BoardPage from "./pages/BoardPage";
+import BoardsPage from "./pages/BoardsPage/BoardsPage";
+import BoardPage from "./pages/BoardPage/BoardPage";
 import Layout from "./components/Layout";
 import NotFoundPage from "./pages/NotFoundPage";
 
