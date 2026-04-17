@@ -52,6 +52,11 @@ export default function BoardsPage() {
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Новая доска"
           className={styles.input}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleCreate();
+            }
+          }}
         />
 
         <button
