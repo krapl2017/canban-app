@@ -1,12 +1,20 @@
 
+Первый запуск после git clone
 #### Запуск backend
 ``` bash
 cd backend
+composer install
+перезапустить терминал (vs code если терминал в нём)
+cp .env.example .env
+php artisan key:generate
+php artisan config:clear
+php artisan migrate
 php artisan serve
 ```
 #### Запуск frontend
 ``` bash
 cd frontend
+bun i
 bun run dev
 ```
 
@@ -99,11 +107,6 @@ bun add react-router-dom
 - **Droppable (колонки)**
 - **Draggable (карточки)**
 
-
-#  Что можно улучшить 
-
-- добавить анимации
-- модалки вместо confirm
 # Комментарий мб следующий пункт
 #### Запуск backend
 ``` bash
@@ -116,4 +119,15 @@ cd frontend
 bun run dev
 ```
 
+
+- заменить фетчи и сделать везде сначала сохранение а потом синхронизацию с бд
+
+
+- довынести css в модули
+- блок с изображениями внутри карточки: картинки 3 в ряд больше чем 6 появляется скролл у картинки сделать справа крестик
+- подумать над повторяемыми css
+- подумать над повторяемыми компонентами
+
+- составлять отчет по практике
+- фото задания выложить
 
