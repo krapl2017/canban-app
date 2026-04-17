@@ -31,14 +31,7 @@ class BoardController extends Controller
         }, 'columns.cards.images'])->findOrFail($id);
     }
 
-    // Удалить доску
-    public function destroy($id)
-    {
-        Board::findOrFail($id)->delete();
-
-        return response()->json(['success' => true]);
-    }
-
+    // Обновить
     public function update(Request $request, $id)
     {
         $board = Board::findOrFail($id);
@@ -47,4 +40,14 @@ class BoardController extends Controller
 
         return $board;
     }
+
+    // Удалить доску
+    public function destroy($id)
+    {
+        Board::findOrFail($id)->delete();
+
+        return response()->json(['success' => true]);
+    }
+
+    
 }

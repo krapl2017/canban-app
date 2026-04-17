@@ -23,8 +23,8 @@ export default function BoardPage() {
   const [activeCard, setActiveCard] = useState<any>(null);
   const [columnTitle, setColumnTitle] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isEditingTitle, setIsEditingTitle] = useState(false);
-  const [editTitle, setEditTitle] = useState("");
+  const [isEditingBoardTitle, setIsEditingBoardTitle] = useState(false);
+  const [editBoardTitle, setEditBoardTitle] = useState("");
   const titleRef = useRef<HTMLDivElement | null>(null);
 
   const sensors = useSensors(
@@ -151,11 +151,11 @@ export default function BoardPage() {
   };
 
   const handleSaveBoardTitle = async () => {
-    const trimmed = editTitle.trim();
+    const trimmed = editBoardTitle.trim();
 
     if (!trimmed) {
-      setEditTitle(board.title); // откат
-      setIsEditingTitle(false);
+      setEditBoardTitle(board.title); // откат
+      setIsEditingBoardTitle(false);
       return;
     }
 
@@ -165,11 +165,11 @@ export default function BoardPage() {
       dispatch(fetchBoardById(id!));
     }
 
-    setIsEditingTitle(false);
+    setIsEditingBoardTitle(false);
   };
 
   useEffect(() => {
-    if (!isEditingTitle) return;
+    if (!isEditingBoardTitle) return;
 
     const handleClickOutside = (e: MouseEvent) => {
       if (!titleRef.current) return;
@@ -184,7 +184,7 @@ export default function BoardPage() {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isEditingTitle, editTitle]);
+  }, [isEditingBoardTitle, editBoardTitle]);
 
   if (!board) return <div>Loading...</div>;
 
@@ -192,25 +192,25 @@ export default function BoardPage() {
     <div className={styles.page}>
       <div className={styles.header}>
         <div ref={titleRef}>
-          {isEditingTitle ? (
+          {isEditingBoardTitle ? (
             <input
-              value={editTitle}
-              onChange={(e) => setEditTitle(e.target.value)}
+              value={editBoardTitle}
+              onChange={(e) => setEditBoardTitle(e.target.value)}
               autoFocus
               className={styles.titleInput}
               onKeyDown={(e) => {
                 if (e.key === "Enter") handleSaveBoardTitle();
                 if (e.key === "Escape") {
-                  setEditTitle(board.title);
-                  setIsEditingTitle(false);
+                  setEditBoardTitle(board.title);
+                  setIsEditingBoardTitle(false);
                 }
               }}
             />
           ) : (
             <div
               onClick={() => {
-                setEditTitle(board.title);
-                setIsEditingTitle(true);
+                setEditBoardTitle(board.title);
+                setIsEditingBoardTitle(true);
               }}
               className={styles.titleBox}
             >

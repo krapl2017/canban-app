@@ -20,7 +20,7 @@ class ColumnController extends Controller
         ]);
     }
 
-    // Обновить (например при drag & drop)
+    // Обновить
     public function update(Request $request, $id)
     {
         $column = Column::findOrFail($id);
