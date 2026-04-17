@@ -14,6 +14,7 @@ import {
   closestCenter,
 } from "@dnd-kit/core";
 import { useRef } from "react";
+import styles from "./BoardPage.module.css"
 
 export default function BoardPage() {
   const { id } = useParams();
@@ -188,37 +189,15 @@ export default function BoardPage() {
   if (!board) return <div>Loading...</div>;
 
   return (
-    <div
-      style={{
-        flex: 1,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        overflow: "hidden",
-      }}
-    >
-      <div
-        style={{
-          marginBottom: 20,
-          padding: 20,
-          flexShrink: 0,
-        }}
-      >
+    <div className={styles.page}>
+      <div className={styles.header}>
         <div ref={titleRef}>
           {isEditingTitle ? (
             <input
               value={editTitle}
               onChange={(e) => setEditTitle(e.target.value)}
               autoFocus
-              style={{
-                fontSize: 26,
-                fontWeight: "bold",
-                padding: "6px 10px",
-                borderRadius: 10,
-                border: "1px solid #ddd",
-                outline: "none",
-                textAlign: "center",
-              }}
+              className={styles.titleInput}
               onKeyDown={(e) => {
                 if (e.key === "Enter") handleSaveBoardTitle();
                 if (e.key === "Escape") {
@@ -233,15 +212,7 @@ export default function BoardPage() {
                 setEditTitle(board.title);
                 setIsEditingTitle(true);
               }}
-              style={{
-                cursor: "pointer",
-                fontSize: 26,
-                fontWeight: 600,
-                padding: "6px 12px",
-                borderRadius: 12,
-                background: "#fff",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
-              }}
+              className={styles.titleBox}
             >
               {board.title}
             </div>
@@ -250,58 +221,25 @@ export default function BoardPage() {
       </div>
 
       {/* добавление колонки */}
-      <div
-        style={{
-          display: "flex",
-          gap: 10,
-          marginBottom: 30,
-          flexShrink: 0
-        }}
-      >
+      <div className={styles.createColumn}>
         <input
           value={columnTitle}
           onChange={(e) => setColumnTitle(e.target.value)}
           placeholder="Новая колонка"
-          style={{
-            padding: "10px 14px",
-            borderRadius: 10,
-            border: "1px solid #ddd",
-            outline: "none",
-            width: 220,
-          }}
+          className={styles.input}
         />
 
         <button
           onClick={handleCreateColumn}
-          style={{
-            background: "#f4a261",
-            color: "white",
-            border: "none",
-            padding: "10px 16px",
-            borderRadius: 10,
-            cursor: "pointer",
-          }}
+          className={styles.button}
         >
           Добавить
         </button>
       </div>
 
       {/* колонки */}
-      <div
-        style={{
-          flex: 1,
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          overflow: "hidden",
-        }}
-      >
-        <div
-          style={{
-            flex: 1,
-            overflowX: "auto",
-            overflowY: "hidden",
-          }}
+      <div className={styles.columnsWrapper}>
+        <div className={styles.columnsScroll}
         >
             <DndContext
               sensors={sensors}
@@ -314,14 +252,7 @@ export default function BoardPage() {
               onDragCancel={() => setActiveCard(null)}
               
             >
-              <div
-                style={{
-                  display: "flex",
-                  gap: 20,
-                  alignItems: "flex-start",
-                  paddingBottom: "0 20px",
-                }}
-              >
+              <div className={styles.columns}>
                 {board.columns.map((col: any) => (
                   <Column
                     key={col.id}
@@ -334,21 +265,13 @@ export default function BoardPage() {
               </div>
               <DragOverlay>
                 {activeCard ? (
-                  <div
-                    style={{
-                      background: "white",
-                      padding: 10,
-                      borderRadius: 12,
-                      width: 250,
-                      boxShadow: "0 10px 25px rgba(0,0,0,0.15)",
-                    }}
-                  >
-                    <div style={{ fontWeight: 600 }}>
+                  <div className={styles.dragOverlay}>
+                    <div className={styles.dragTitle}>
                       {activeCard.title}
                     </div>
 
                     {activeCard.description && (
-                      <div style={{ marginTop: 4, color: "#555" }}>
+                      <div className={styles.dragDescription}>
                         {activeCard.description}
                       </div>
                     )}

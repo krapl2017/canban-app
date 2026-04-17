@@ -31,7 +31,7 @@ export default function BoardsPage() {
   return (
     <div className={styles.page}>
       {/* USER */}
-      <div style={{ marginBottom: 20 }}>
+      <div className={styles.userBlock}>
         <input
           value={userName}
           onChange={(e) => setUserName(e.target.value)}
