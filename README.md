@@ -26,6 +26,8 @@ cd frontend (перейти в папку frontend)
 bun i
 bun run dev
 ```
+
+- Открыть в браузере http://localhost:5173/
 ## Дальнейшие запуски
 #### Запуск backend (в корне проекта)
 ``` bash
