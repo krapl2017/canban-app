@@ -52,6 +52,17 @@ const boardsSlice = createSlice({
       state.currentBoard.columns = state.currentBoard.columns.map((col: any) =>
         col && col.id === tempId ? newColumn : col
       );
+    },
+    updateColumnTitle(state, action) {
+      const { columnId, title } = action.payload;
+
+      if (!state.currentBoard) return;
+
+      state.currentBoard.columns = state.currentBoard.columns.map((col: any) =>
+        col.id === columnId
+          ? { ...col, title }
+          : col
+      );
     }
   },
   extraReducers: (builder) => {
@@ -72,5 +83,5 @@ const boardsSlice = createSlice({
   },
 });
 
-export const { setBoard, updateBoardState, replaceColumn } = boardsSlice.actions;
+export const { setBoard, updateBoardState, replaceColumn, updateColumnTitle } = boardsSlice.actions;
 export default boardsSlice.reducer;

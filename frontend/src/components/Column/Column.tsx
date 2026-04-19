@@ -13,6 +13,8 @@ import { useState } from "react";
 import Modal from "../Modal";
 import { useRef, useEffect } from "react";
 import styles from "./Column.module.css"
+import { updateColumnTitle } from "../../features/boards/boardSlice";
+import { useDispatch } from "react-redux";
 
 export default function Column({ column, onAddCard, refresh, setGlobalModalOpen }: any) {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -22,6 +24,7 @@ export default function Column({ column, onAddCard, refresh, setGlobalModalOpen 
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(column.title);
   const editRef = useRef<HTMLDivElement | null>(null);
+  const dispatch = useDispatch<any>();
 
   const handleDeleteColumn = async () => {
     await deleteColumn(column.id);
@@ -69,17 +72,34 @@ export default function Column({ column, onAddCard, refresh, setGlobalModalOpen 
     const trimmed = editTitle.trim();
 
     if (!trimmed) {
-      setEditTitle(column.title); // откат
+      setEditTitle(column.title);
       setIsEditing(false);
       return;
     }
 
-    if (trimmed !== column.title) {
-      await updateColumn(column.id, { title: trimmed });
-      refresh();
+    if (trimmed === column.title) {
+      setIsEditing(false);
+      return;
     }
 
+    const prevTitle = column.title;
+
+    dispatch(updateColumnTitle({
+      columnId: column.id,
+      title: trimmed,
+    }));
+
     setIsEditing(false);
+
+    try {
+      await updateColumn(column.id, { title: trimmed });
+    } catch (e) {
+      dispatch(updateColumnTitle({
+        columnId: column.id,
+        title: prevTitle,
+      }));
+      alert("Ошибка обновления");
+    }
   };
 
   {/** клики вне редактирования названия колонки */}
