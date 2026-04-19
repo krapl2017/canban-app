@@ -26,6 +26,7 @@ export default function BoardPage() {
   const [isEditingBoardTitle, setIsEditingBoardTitle] = useState(false);
   const [editBoardTitle, setEditBoardTitle] = useState("");
   const titleRef = useRef<HTMLDivElement | null>(null);
+  const inputColumnRef = useRef<HTMLInputElement>(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -46,6 +47,7 @@ export default function BoardPage() {
     });
 
     setColumnTitle("");
+    inputColumnRef.current?.focus();
     dispatch(fetchBoardById(id!));
   };
 
@@ -194,6 +196,7 @@ export default function BoardPage() {
         <div ref={titleRef}>
           {isEditingBoardTitle ? (
             <input
+              ref={inputColumnRef} 
               value={editBoardTitle}
               onChange={(e) => setEditBoardTitle(e.target.value)}
               autoFocus
@@ -227,6 +230,11 @@ export default function BoardPage() {
           onChange={(e) => setColumnTitle(e.target.value)}
           placeholder="Новая колонка"
           className={styles.input}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleCreateColumn();
+            }
+          }}
         />
 
         <button
