@@ -14,7 +14,7 @@ git clone https://github.com/krapl2017/canban-app.git
 cd backend (перейти в папку backend)
 composer install
 перезапустить терминал (перезапустить редактор кода)
-cp .env.example .env (создать .end и скопировать туда содержимое .env.example)
+cp .env.example .env (создать .env и скопировать туда содержимое .env.example)
 php artisan key:generate
 php artisan config:clear
 php artisan migrate
