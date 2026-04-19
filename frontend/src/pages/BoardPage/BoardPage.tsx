@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { createColumn, createCard, reorderCards, updateBoard } from "../../api/api";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchBoardById, setBoard } from "../../features/boards/boardSlice";
+import { fetchBoardById, setBoard, updateBoardState, replaceColumn } from "../../features/boards/boardSlice";
 import type { RootState } from "../../app/store";
 import Column from "../../components/Column/Column";
 import {
@@ -41,14 +41,44 @@ export default function BoardPage() {
   const handleCreateColumn = async () => {
     if (!columnTitle) return;
 
-    await createColumn({
+    const tempId = Date.now();
+
+    const tempColumn = {
+      id: tempId, // временный id
       title: columnTitle,
-      board_id: Number(id),
-    });
+      cards: [],
+    };
+
+    dispatch(updateBoardState({
+      columns: [...board.columns, tempColumn],
+    }));
 
     setColumnTitle("");
     inputColumnRef.current?.focus();
-    dispatch(fetchBoardById(id!));
+
+    try {
+      const response = await createColumn({
+        title: columnTitle,
+        board_id: Number(id),
+      });
+
+      const newCol = response.data;
+
+      const normalizedColumn = {
+        ...newCol,
+        cards: [],
+      };
+      console.log(normalizedColumn);
+      // замена temp на реальную
+      dispatch(replaceColumn({
+        tempId,
+        newColumn: normalizedColumn,
+      }));
+
+    } catch (e) {
+      dispatch(fetchBoardById(id!));
+      alert("Ошибка создания колонки");
+    }
   };
 
   const handleCreateCard = async (columnId: number, title: string) => {
@@ -153,22 +183,31 @@ export default function BoardPage() {
   };
 
   const handleSaveBoardTitle = async () => {
-    const trimmed = editBoardTitle.trim();
+  const trimmed = editBoardTitle.trim();
 
-    if (!trimmed) {
-      setEditBoardTitle(board.title); // откат
-      setIsEditingBoardTitle(false);
-      return;
-    }
-
-    if (trimmed !== board.title) {
-      await updateBoard(board.id, {title: trimmed});
-
-      dispatch(fetchBoardById(id!));
-    }
-
+  if (!trimmed) {
+    setEditBoardTitle(board.title);
     setIsEditingBoardTitle(false);
-  };
+    return;
+  }
+
+  const prevBoard = board;
+
+  // мгновенно обновляем UI
+  dispatch(setBoard({
+    ...board,
+    title: trimmed,
+  }));
+
+  setIsEditingBoardTitle(false);
+
+  try {
+    await updateBoard(board.id, { title: trimmed });
+  } catch (e) {
+    dispatch(setBoard(prevBoard));
+    alert("Ошибка сохранения");
+  }
+};
 
   useEffect(() => {
     if (!isEditingBoardTitle) return;

@@ -36,6 +36,23 @@ const boardsSlice = createSlice({
       setBoard(state, action) {
       state.currentBoard = action.payload;
     },
+      updateBoardState(state, action) {
+      if (!state.currentBoard) return;
+
+      state.currentBoard = {
+        ...state.currentBoard,
+        ...action.payload,
+      };
+    },
+    replaceColumn(state, action) {
+      const { tempId, newColumn } = action.payload;
+
+      if (!state.currentBoard) return;
+
+      state.currentBoard.columns = state.currentBoard.columns.map((col: any) =>
+        col && col.id === tempId ? newColumn : col
+      );
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -55,6 +72,5 @@ const boardsSlice = createSlice({
   },
 });
 
-export const { setBoard } = boardsSlice.actions;
-
+export const { setBoard, updateBoardState, replaceColumn } = boardsSlice.actions;
 export default boardsSlice.reducer;
