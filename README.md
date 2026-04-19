@@ -1,24 +1,42 @@
+# Требования
+На машине должны быть установлены:
+- php (https://www.php.net/manual/ru/install.php)
+- composer (https://getcomposer.org/download/)
+- bun (https://bun.com/)
+# Установка
 
-Первый запуск после git clone
-#### Запуск backend
+```
+git clone https://github.com/krapl2017/canban-app.git
+```
+## Первый запуск после git clone
+#### Запуск backend (в корне проекта)
 ``` bash
-cd backend
+cd backend (перейти в папку backend)
 composer install
-перезапустить терминал (vs code если терминал в нём)
-cp .env.example .env
+перезапустить терминал (перезапустить редактор кода)
+cp .env.example .env (создать .end и скопировать туда содержимое .env.example)
 php artisan key:generate
 php artisan config:clear
 php artisan migrate
 php artisan serve
 ```
-#### Запуск frontend
+#### Запуск frontend (в корне проекта)
 ``` bash
-cd frontend
+cd frontend (перейти в папку frontend)
 bun i
 bun run dev
 ```
-
-
+## Дальнейшие запуски
+#### Запуск backend (в корне проекта)
+``` bash
+cd backend (перейти в папку backend)
+php artisan serve
+```
+#### Запуск frontend (в корне проекта)
+``` bash
+cd frontend (перейти в папку frontend)
+bun run dev
+```
 #  1. Общая архитектура
 
 ##  Стек
@@ -26,7 +44,7 @@ bun run dev
 - **Frontend**
     - React + TypeScript
     - Redux Toolkit
-    - Drag & Drop → `@dnd-kit` (современный и плавный)
+    - Drag & Drop → `@dnd-kit`
     - Bun (менеджер пакетов + dev server)
 - **Backend**
     - Laravel (REST API)
@@ -56,7 +74,7 @@ kanban-app/
  ├── backend/ (Laravel)
  └── frontend/ (React + Bun)
 ```
-#  3. Backend — API дизайн
+#  3. Backend
 
 ##  endpoints
 ### Auth
@@ -70,6 +88,7 @@ GET  /api/me
 GET    /api/boards  
 POST   /api/boards  
 GET    /api/boards/{id}  
+PUT /api/boards/{id}
 DELETE /api/boards/{id}
 ```
 ### Columns
@@ -83,6 +102,7 @@ DELETE /api/columns/{id}
 POST   /api/cards  
 PUT    /api/cards/{id}  
 DELETE /api/cards/{id}
+POST /api/cards/reorder
 ```
 ### Images
 ```
@@ -90,44 +110,4 @@ POST   /api/cards/{id}/images
 DELETE /api/images/{id}
 ```
 
-# 4. Frontend
-### Что надо устанавливать в ../frontend:
-``` bash
-bun add @reduxjs/toolkit react-redux axios
-bun add @dnd-kit/core @dnd-kit/sortable @dnd-kit/modifiers @dnd-kit/utilities
-bun add react-router-dom
-
-```
-
-
-#### Реализация drag&drop:
-
-Есть 3 сущности:
-- **DndContext** → оборачивает всё
-- **Droppable (колонки)**
-- **Draggable (карточки)**
-
-# Комментарий мб следующий пункт
-#### Запуск backend
-``` bash
-cd backend
-php artisan serve
-```
-#### Запуск frontend
-``` bash
-cd frontend
-bun run dev
-```
-
-
-- заменить фетчи и сделать везде сначала сохранение а потом синхронизацию с бд
-
-
-- довынести css в модули
-- блок с изображениями внутри карточки: картинки 3 в ряд больше чем 6 появляется скролл у картинки сделать справа крестик
-- подумать над повторяемыми css
-- подумать над повторяемыми компонентами
-
-- составлять отчет по практике
-- фото задания выложить
 
