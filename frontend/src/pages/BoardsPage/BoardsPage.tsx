@@ -30,7 +30,7 @@ export default function BoardsPage() {
 
   return (
     <div className={styles.page}>
-      {/* USER */}
+      {/* пользователь */}
       <div className={styles.userBlock}>
         <input
           value={userName}
@@ -40,12 +40,11 @@ export default function BoardsPage() {
         />
       </div>
 
-      {/* TITLE */}
       <h1 className={styles.title}>
         Мои доски
       </h1>
 
-      {/* CREATE BOARD */}
+      {/* создание доски */}
       <div className={styles.createBlock}>
         <input
           value={title}
@@ -67,7 +66,7 @@ export default function BoardsPage() {
         </button>
       </div>
 
-      {/* BOARDS LIST */}
+      {/* доски */}
       <div className={styles.boardsList}>
         {boards.map((b) => (
           <BoardCard key={b.id} board={b} />

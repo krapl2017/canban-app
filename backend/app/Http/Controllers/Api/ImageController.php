@@ -8,7 +8,7 @@ use App\Models\Image;
 
 class ImageController extends Controller
 {
-    // Загрузка изображения
+    // загрузка
     public function store(Request $request, $id)
     {
         if (!$request->hasFile('image')) {
@@ -23,7 +23,7 @@ class ImageController extends Controller
         ]);
     }
 
-    // Удаление изображения
+    // удаление
     public function destroy($id)
     {
         Image::findOrFail($id)->delete();

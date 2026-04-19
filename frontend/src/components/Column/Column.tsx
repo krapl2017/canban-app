@@ -127,7 +127,7 @@ export default function Column({ column, onAddCard, refresh, setGlobalModalOpen 
       className={styles.container}
       
     >
-      {/** название колонки */}
+      {/** заголовок */}
       <div
         ref={editRef}
         className={styles.header}

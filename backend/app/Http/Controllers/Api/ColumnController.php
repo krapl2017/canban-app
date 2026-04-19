@@ -8,7 +8,7 @@ use App\Models\Column;
 
 class ColumnController extends Controller
 {
-    // Создать колонку
+    // создание
     public function store(Request $request)
     {
         $request->validate([
@@ -20,7 +20,7 @@ class ColumnController extends Controller
         ]);
     }
 
-    // Обновить
+    // обновление
     public function update(Request $request, $id)
     {
         $column = Column::findOrFail($id);
@@ -30,7 +30,7 @@ class ColumnController extends Controller
         return $column;
     }
 
-    // Удалить
+    // удаление
     public function destroy($id)
     {
         Column::findOrFail($id)->delete();

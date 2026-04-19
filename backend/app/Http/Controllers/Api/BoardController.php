@@ -8,13 +8,13 @@ use App\Models\Board;
 
 class BoardController extends Controller
 {
-    // Получить все доски пользователя
+    // получение всех досок пользователя
     public function index(Request $request)
     {
         return Board::where('user_name', $request->user_name)->get();
     }
 
-    // Создать доску
+    // создание доски
     public function store(Request $request)
     {
         return Board::create([
@@ -23,7 +23,7 @@ class BoardController extends Controller
         ]);
     }
 
-    // Получить одну доску со всем содержимым
+    // получение всех досок со всем содержимым
     public function show($id)
     {
         return Board::with(['columns.cards' => function ($q) {
@@ -31,7 +31,7 @@ class BoardController extends Controller
         }, 'columns.cards.images'])->findOrFail($id);
     }
 
-    // Обновить
+    // обновление доски
     public function update(Request $request, $id)
     {
         $board = Board::findOrFail($id);
@@ -41,7 +41,7 @@ class BoardController extends Controller
         return $board;
     }
 
-    // Удалить доску
+    // удаление доски
     public function destroy($id)
     {
         Board::findOrFail($id)->delete();

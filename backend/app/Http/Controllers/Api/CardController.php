@@ -8,7 +8,7 @@ use App\Models\Card;
 
 class CardController extends Controller
 {
-    // Создать карточку
+    // создание карточки
     public function store(Request $request)
     {
         return Card::create([
@@ -18,7 +18,7 @@ class CardController extends Controller
         ]);
     }
 
-    // Обновить (включая перенос между колонками)
+    // обновление карточки
     public function update(Request $request, $id)
     {
         $card = Card::findOrFail($id);
@@ -28,7 +28,7 @@ class CardController extends Controller
         return $card;
     }
 
-    // Удалить
+    // удаление
     public function destroy($id)
     {
         Card::findOrFail($id)->delete();
@@ -36,7 +36,7 @@ class CardController extends Controller
         return response()->json(['success' => true]);
     }
 
-    // Поменять порядок карточек
+    // смена порядка карточек
     public function reorder(Request $request)
     {
         $cards = $request->cards;

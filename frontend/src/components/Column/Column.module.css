@@ -17,7 +17,7 @@
   max-height: 100%;
 }
 
-/* header */
+/* заголовок */
 .header {
   display: flex;
   justify-content: space-between;
@@ -44,7 +44,7 @@
   background: #fff;
 }
 
-/* delete button */
+/* крестик удаления */
 .deleteBtn {
   position: absolute;
   top: 6px;
@@ -63,7 +63,7 @@
   color: var(--primary-hover);
 }
 
-/* cards container */
+/* карточки */
 .cardsWrapper {
   display: flex;
   flex-direction: column;
@@ -86,7 +86,7 @@
   max-height: 500px;
 }
 
-/* add card */
+/* добавление карточки */
 .addBox {
   margin-top: auto;
   background: #fff;

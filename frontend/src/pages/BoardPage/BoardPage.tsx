@@ -44,7 +44,7 @@ export default function BoardPage() {
     const tempId = Date.now();
 
     const tempColumn = {
-      id: tempId, // временный id
+      id: tempId,
       title: columnTitle,
       cards: [],
     };

@@ -6,14 +6,13 @@
   overflow: hidden;
 }
 
-/* ===== Header ===== */
+/* заголовок */
 .header {
   margin-bottom: 20px;
   padding: 20px;
   flex-shrink: 0;
 }
 
-/* заголовок */
 .titleBox {
   cursor: pointer;
   font-size: 26px;
@@ -35,7 +34,7 @@
   text-align: center;
 }
 
-/* ===== Create column ===== */
+/* создание колонки */
 .createColumn {
   display: flex;
   gap: 10px;
@@ -60,7 +59,7 @@
   cursor: pointer;
 }
 
-/* ===== Columns area ===== */
+/* контейнер для колонок */
 .columnsWrapper {
   flex: 1;
   width: 100%;
